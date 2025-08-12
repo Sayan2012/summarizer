@@ -1,218 +1,385 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SummarizeAI — Tools</title>
-<meta name="description" content="SummarizeAI — an elegant suite of lightweight AI tools."/>
-<style>
-:root{
-  --bg:#0f1720; --muted:#94a3b8; --accent:#0ea5ff; --glass:rgba(255,255,255,0.03);
-  --card-radius:12px; --max-width:1120px; --ease:cubic-bezier(.2,.9,.3,1);
-}
-*{box-sizing:border-box} html,body{height:100%}
-body{
-  margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(14,165,255,0.04), transparent 8%),
-              linear-gradient(180deg,#07101a 0%, #0f1720 60%);
-  color:#e6eef6;-webkit-font-smoothing:antialiased;line-height:1.45;
-}
-.wrap{max-width:var(--max-width);margin:0 auto;padding:36px 22px}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SummarizeAI — Workspace</title>
+  <meta name="description" content="SummarizeAI — lightweight professional workspace for multiple AI tools." />
 
-/* header */
-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;gap:12px;align-items:center}
-.logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6ee7b7);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04293a}
-.brand h1{margin:0;font-size:1rem}
-.nav{display:flex;gap:12px;align-items:center}
-.nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px}
-.searchbar{margin-top:18px;display:flex;gap:12px;align-items:center}
-.searchbar input{
-  flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);
-  background:transparent;color:inherit;font-size:0.95rem;
-}
-.filters{display:flex;gap:8px}
+  <!--
+    Instructions:
+    - Replace each card's data-src with the actual URL of the tool (GitHub Pages, HF space, etc.)
+    - Ensure each tool page listens for postMessage({type:'summarizer:prefill', text: '...'}) to accept quick input.
+    - The iframe content is visually flushed into the workspace. Remove outer margins/borders on the tool pages when possible,
+      or keep a minimal header so the experience feels integrated.
+  -->
 
-/* hero condensed */
-.hero-compact{display:flex;gap:18px;align-items:center;justify-content:space-between;margin-top:18px}
-.hero-compact .lead{max-width:680px}
-.lead h2{margin:0;font-size:1.6rem}
-.lead p{margin:6px 0 0;color:var(--muted)}
+  <style>
+    :root{
+      --bg: #071018;
+      --text: #e6eef6;
+      --muted: #94a3b8;
+      --accent: #0ea5ff;
+      --glass: rgba(255,255,255,0.03);
+      --card-radius: 12px;
+      --max-width: 1320px;
+      --ease: cubic-bezier(.2,.9,.3,1);
+      --sidebar-w: 260px;
+      --right-w: 320px;
+    }
 
-/* tool grid */
-.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px}
-.tool-card{
-  background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-  padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
-  transition:transform .18s var(--ease),box-shadow .18s var(--ease);
-  cursor:pointer;
-}
-.tool-card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,0.5)}
-.tool-card h3{margin:0 0 6px 0}
-.tool-card p{margin:0;color:var(--muted);font-size:0.95rem}
-.tool-meta{display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:space-between}
-.badge{font-size:0.78rem;color:var(--muted);padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+    /* Light theme */
+    html.light {
+      --bg: #f7fafc;
+      --text: #0b1220;
+      --muted: #475569;
+      --glass: rgba(2,6,23,0.03);
+    }
 
-/* modal */
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.8));z-index:60}
-.modal.open{display:flex}
-.modal-inner{width:min(1100px,96vw);height:min(760px,92vh);background:#071018;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 40px 120px rgba(2,6,23,0.7)}
-.modal .toolbar{display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.01)}
-.modal iframe{width:100%;height:calc(100% - 46px);border:0;background:#fff}
+    * { box-sizing: border-box; }
+    html,body { height: 100%; margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; color: var(--text); background: radial-gradient(900px 360px at 6% 8%, rgba(14,165,255,0.03), transparent 6%), linear-gradient(180deg,#061018 0%, var(--bg) 60%); }
 
-/* responsive */
-@media (max-width:720px){
-  .hero-compact{flex-direction:column;align-items:flex-start}
-}
-</style>
+    /* Container */
+    .wrap { max-width: var(--max-width); margin: 18px auto; padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Header */
+    header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .brand { display:flex; gap:12px; align-items:center; }
+    .logo { width:46px; height:46px; border-radius:10px; background: linear-gradient(135deg,var(--accent), #6ee7b7); display:flex; align-items:center; justify-content:center; font-weight:700; color:#04293a; box-shadow: 0 8px 28px rgba(2,6,23,0.45); }
+    .brand h1 { margin:0; font-size:1rem; font-weight:700; }
+    .brand p { margin:0; font-size:0.86rem; color:var(--muted); margin-top:4px; }
+
+    .header-actions { display:flex; gap:10px; align-items:center; }
+    .small-btn { border-radius:10px; padding:8px 10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); cursor:pointer; font-weight:600; }
+    .primary-btn { padding:10px 14px; border-radius:10px; border:0; background:linear-gradient(90deg,var(--accent), #60a5fa); color:#04293a; box-shadow:0 12px 36px rgba(14,165,255,0.08); cursor:pointer; font-weight:700; }
+
+    /* Workspace layout */
+    .workspace { display:grid; grid-template-columns: var(--sidebar-w) 1fr var(--right-w); gap:16px; height: calc(100vh - 140px); align-items:stretch; }
+
+    /* Sidebar */
+    .sidebar { background: var(--glass); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:12px; min-height:0; }
+    .search { display:flex; gap:8px; align-items:center; }
+    .search input { flex:1; padding:10px 12px; border-radius:9px; border:1px solid rgba(255,255,255,0.03); background:transparent; color:inherit; }
+    .tool-list { overflow:auto; padding-right:6px; display:flex; flex-direction:column; gap:8px; }
+    .tool-card { display:flex; flex-direction:column; gap:8px; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); cursor:pointer; transition:transform .18s var(--ease), box-shadow .18s var(--ease); }
+    .tool-card:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(2,6,23,0.45); }
+    .tool-card h4 { margin:0; font-size:0.98rem; }
+    .tool-card p { margin:0; font-size:0.86rem; color:var(--muted); }
+    .tool-meta { display:flex; gap:8px; margin-top:6px; align-items:center; }
+    .badge { padding:6px 8px; border-radius:8px; font-size:0.82rem; color:var(--muted); background:transparent; border:1px solid rgba(255,255,255,0.02); }
+
+    /* Main area */
+    .main { background: transparent; display:flex; flex-direction:column; gap:10px; min-height:0; }
+    .toolbar { display:flex; gap:8px; align-items:center; padding:10px; border-radius:10px; background:var(--glass); border:1px solid rgba(255,255,255,0.03); }
+    .quick-input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); background:transparent; color:inherit; }
+    .iframe-wrap { flex:1; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); background:transparent; }
+    iframe#workspaceFrame { width:100%; height:100%; border:0; display:block; background:transparent; }
+
+    /* Right panel */
+    .right { background: var(--glass); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:12px; min-height:0; overflow:auto; }
+    .panel-title { font-weight:700; }
+    .history { display:flex; flex-direction:column; gap:8px; }
+    .history-item { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.02); color:var(--muted); cursor:pointer; text-align:left; }
+    .controls-row { display:flex; gap:8px; align-items:center; }
+
+    /* Responsive */
+    @media (max-width:1150px) {
+      .workspace { grid-template-columns: 220px 1fr; grid-template-rows: auto; }
+      .right { display:none; }
+    }
+    @media (max-width:760px) {
+      .wrap { padding:12px; }
+      .workspace { grid-template-columns: 1fr; grid-auto-rows: auto; height: auto; gap:12px; }
+      .sidebar { order:0; }
+      .main { order:1; }
+      .right { order:2; display:block; }
+      .iframe-wrap { height: 60vh; }
+    }
+
+    /* subtle focus outlines */
+    button:focus, input:focus, select:focus { outline:2px solid rgba(14,165,255,0.12); outline-offset:2px; }
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">
-        <div class="logo" aria-hidden>SA</div>
-        <div><h1>AI hub</h1><div style="font-size:0.85rem;color:var(--muted)">AI tools hub</div></div>
+      <div class="brand" aria-hidden>
+        <div class="logo">SA</div>
+        <div>
+          <h1>SummarizeAI</h1>
+          <p>Workspace — multiple AI tools, one elegant interface</p>
+        </div>
       </div>
-      <nav class="nav">
-        <a href="#tools">Tools</a>
-        <a href="#demo">Demo</a>
-      </nav>
+
+      <div class="header-actions">
+        <button id="openNewTab" class="small-btn" title="Open current tool in a new tab">Open tool</button>
+        <button id="themeToggle" class="small-btn" aria-pressed="false" title="Toggle light/dark">Toggle theme</button>
+        <button id="logout" class="small-btn" style="display:none">Sign out</button>
+      </div>
     </header>
 
-    <section class="hero-compact">
-      <div class="lead">
-        <h2>Multiple AI tools — same polished experience</h2>
-        <p>Try tools directly from this page. Click any card to open the tool in a modal for a seamless experience.</p>
-        <div class="searchbar" style="margin-top:12px">
-          <input id="search" placeholder="Search tools e.g. summarize, paraphrase, translate..." />
-          <div class="filters">
-            <button class="badge" data-filter="all">All</button>
-            <button class="badge" data-filter="text">Text</button>
-            <button class="badge" data-filter="language">Language</button>
+    <div class="workspace" role="application" aria-label="AI workspace">
+      <!-- Left sidebar: tools + search -->
+      <aside class="sidebar" aria-label="Tools">
+        <div class="search" role="search">
+          <input id="toolSearch" placeholder="Search tools (e.g. summarize, translate)"/>
+          <button id="filterText" class="small-btn">Text</button>
+        </div>
+
+        <div style="font-weight:700; margin-top:6px">Tools</div>
+        <div id="toolList" class="tool-list" role="list">
+          <!-- Replace data-src values with your tool URLs -->
+          <div class="tool-card" data-src="summarizer.html" data-tags="text" role="listitem" tabindex="0">
+            <h4>Summarizer</h4>
+            <p>Condense long content into concise summaries.</p>
+            <div class="tool-meta"><div class="badge">Text</div><div class="badge">Live</div></div>
+          </div>
+
+          <div class="tool-card" data-src="paraphraser.html" data-tags="text" role="listitem" tabindex="0">
+            <h4>Paraphraser</h4>
+            <p>Rewrite sentences to change tone, structure, or clarity.</p>
+            <div class="tool-meta"><div class="badge">Text</div><div class="badge">Soon</div></div>
+          </div>
+
+          <div class="tool-card" data-src="grammar.html" data-tags="text" role="listitem" tabindex="0">
+            <h4>Grammar & Proofreader</h4>
+            <p>Fix grammar, punctuation, and improve style.</p>
+            <div class="tool-meta"><div class="badge">Text</div><div class="badge">Soon</div></div>
+          </div>
+
+          <div class="tool-card" data-src="translator.html" data-tags="language" role="listitem" tabindex="0">
+            <h4>Translator</h4>
+            <p>Translate text between languages with context-aware accuracy.</p>
+            <div class="tool-meta"><div class="badge">Language</div><div class="badge">Soon</div></div>
+          </div>
+
+          <div class="tool-card" data-src="keywords.html" data-tags="text" role="listitem" tabindex="0">
+            <h4>Keyword Extractor</h4>
+            <p>Identify important phrases and topics from your content.</p>
+            <div class="tool-meta"><div class="badge">Text</div><div class="badge">Soon</div></div>
           </div>
         </div>
-      </div>
-      <div style="min-width:220px;text-align:right">
-        <div style="font-weight:700">Your workspace</div>
-        <div style="color:var(--muted);font-size:0.95rem">Add more tools anytime</div>
-      </div>
-    </section>
+      </aside>
 
-    <section id="tools">
-      <div class="tools" id="toolGrid">
-        <!-- Card format: data-src is iframe URL, data-tags are comma-separated tags -->
-        <div class="tool-card" data-src="summarizer.html" data-tags="text">
-          <h3>Summarizer</h3>
-          <p>Condense long articles into short, readable summaries. Adjustable length & tone coming soon.</p>
-          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Free</div></div>
+      <!-- Main area: toolbar + iframe -->
+      <main class="main" aria-label="Main tool area">
+        <div class="toolbar" role="toolbar" aria-label="Quick input">
+          <input id="quickInput" class="quick-input" placeholder="Paste text here and click Send — or search/select a tool." aria-label="Quick input" />
+          <div class="controls-row">
+            <button id="sendToTool" class="primary-btn">Send to tool</button>
+            <button id="loadTool" class="small-btn">Load tool</button>
+            <button id="clearInput" class="small-btn">Clear</button>
+          </div>
         </div>
 
-        <div class="tool-card" data-src="https://your-gh-page/paraphraser.html" data-tags="text">
-          <h3>Paraphraser</h3>
-          <p>Rephrase sentences to improve clarity or change tone, while preserving meaning.</p>
-          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        <div class="iframe-wrap" aria-live="polite">
+          <iframe id="workspaceFrame" src="" title="Selected tool"></iframe>
+        </div>
+      </main>
+
+      <!-- Right panel: history & quick actions -->
+      <aside class="right" aria-label="Activity and history">
+        <div>
+          <div class="panel-title">Activity</div>
+          <div style="color:var(--muted);font-size:0.92rem;margin-top:8px">Quick actions & recent tool uses</div>
         </div>
 
-        <div class="tool-card" data-src="https://your-gh-page/grammar.html" data-tags="text">
-          <h3>Grammar & Proofreader</h3>
-          <p>Fix grammar, punctuation, and style suggestions for crisp writing.</p>
-          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        <div>
+          <div style="font-weight:700">Recent</div>
+          <div id="recentList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <!-- populated by JS -->
+          </div>
         </div>
 
-        <div class="tool-card" data-src="https://your-gh-page/keywords.html" data-tags="text">
-          <h3>Keyword Extractor</h3>
-          <p>Auto-extract key phrases and topics from text for summaries or SEO ideas.</p>
-          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        <div>
+          <div style="font-weight:700">Saved snippets</div>
+          <div id="snippetList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <!-- populated by JS -->
+          </div>
         </div>
 
-        <div class="tool-card" data-src="https://your-gh-page/translator.html" data-tags="language">
-          <h3>Translator</h3>
-          <p>Translate text between popular languages with contextual accuracy.</p>
-          <div class="tool-meta"><div class="badge">Language</div><div class="badge">Coming</div></div>
+        <div style="margin-top:auto;display:flex;gap:8px;align-items:center;justify-content:space-between">
+          <div style="color:var(--muted);font-size:0.9rem">Workspace</div>
+          <button id="openSettings" class="small-btn">Settings</button>
         </div>
-
-        <!-- add more cards as needed -->
-      </div>
-    </section>
-
-    <footer style="margin-top:28px;color:var(--muted);display:flex;justify-content:space-between;align-items:center">
-      <div>© <strong>SummarizeAI</strong> — build cool things</div>
-      <div style="font-size:0.9rem">Privacy • Terms</div>
-    </footer>
-  </div>
-
-  <!-- modal for tools -->
-  <div class="modal" id="modal">
-    <div class="modal-inner" role="dialog" aria-modal="true" aria-label="Tool modal">
-      <div class="toolbar">
-        <div id="modalTitle" style="font-weight:600"></div>
-        <div style="display:flex;gap:8px">
-          <button class="badge" id="sendInput">Send demo text</button>
-          <button class="badge" id="closeModal">Close</button>
-        </div>
-      </div>
-      <iframe id="toolFrame" src="" title="Tool"></iframe>
+      </aside>
     </div>
   </div>
 
-<script>
-(function(){
-  const modal = document.getElementById('modal');
-  const toolFrame = document.getElementById('toolFrame');
-  const modalTitle = document.getElementById('modalTitle');
-  const closeModal = document.getElementById('closeModal');
-  const sendInput = document.getElementById('sendInput');
+  <script>
+    // Basic workspace logic (no external libs)
+    const toolList = document.getElementById('toolList');
+    const frame = document.getElementById('workspaceFrame');
+    const quickInput = document.getElementById('quickInput');
+    const sendToTool = document.getElementById('sendToTool');
+    const loadTool = document.getElementById('loadTool');
+    const clearInput = document.getElementById('clearInput');
+    const toolSearch = document.getElementById('toolSearch');
+    const themeToggle = document.getElementById('themeToggle');
+    const openNewTab = document.getElementById('openNewTab');
+    const recentList = document.getElementById('recentList');
+    const snippetList = document.getElementById('snippetList');
+    let currentToolSrc = '';
 
-  // open modal on card click
-  document.getElementById('toolGrid').addEventListener('click', (e)=>{
-    let card = e.target.closest('.tool-card');
-    if(!card) return;
-    const src = card.getAttribute('data-src');
-    const title = card.querySelector('h3').textContent;
-    if(!src) return alert('Tool URL not configured.');
-    toolFrame.src = src;
-    modalTitle.textContent = title;
-    modal.classList.add('open');
-    document.body.style.overflow='hidden';
-  });
+    // Helper: persist recent tools/snippets to localStorage
+    function addRecent(item){
+      const list = JSON.parse(localStorage.getItem('sa_recent') || '[]');
+      list.unshift({time: Date.now(), tool: item});
+      localStorage.setItem('sa_recent', JSON.stringify(list.slice(0,20)));
+      renderRecent();
+    }
+    function addSnippet(text){
+      const list = JSON.parse(localStorage.getItem('sa_snippets') || '[]');
+      list.unshift({time: Date.now(), text});
+      localStorage.setItem('sa_snippets', JSON.stringify(list.slice(0,30)));
+      renderSnippets();
+    }
+    function renderRecent(){
+      const list = JSON.parse(localStorage.getItem('sa_recent') || '[]');
+      recentList.innerHTML = '';
+      list.forEach(it=>{
+        const el = document.createElement('button');
+        el.className = 'history-item';
+        el.textContent = `${new Date(it.time).toLocaleString()} — ${it.tool.split('/').slice(-1)[0] || it.tool}`;
+        el.title = it.tool;
+        el.addEventListener('click', ()=> {
+          frame.src = it.tool;
+          currentToolSrc = it.tool;
+        });
+        recentList.appendChild(el);
+      });
+    }
+    function renderSnippets(){
+      const list = JSON.parse(localStorage.getItem('sa_snippets') || '[]');
+      snippetList.innerHTML = '';
+      list.forEach(it=>{
+        const el = document.createElement('div');
+        el.className = 'history-item';
+        el.textContent = (it.text.length > 80) ? it.text.slice(0,80) + '…' : it.text;
+        el.title = new Date(it.time).toLocaleString();
+        el.addEventListener('click', ()=> { quickInput.value = it.text; });
+        snippetList.appendChild(el);
+      });
+    }
+    renderRecent(); renderSnippets();
 
-  // close modal
-  closeModal.addEventListener('click', ()=>{ modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; });
-
-  // send demo text: postMessage to iframe (works only if iframe page listens)
-  sendInput.addEventListener('click', ()=>{
-    const demoText = prompt('Paste the text you want to send to the tool:') || '';
-    try { toolFrame.contentWindow.postMessage({type:'summarizer:prefill', text: demoText}, '*'); }
-    catch(e){ console.warn('postMessage failed', e); }
-  });
-
-  // simple search/filter
-  const search = document.getElementById('search');
-  const badges = document.querySelectorAll('[data-filter]');
-  badges.forEach(b=> b.addEventListener('click', ()=> {
-    const f = b.getAttribute('data-filter');
-    filterGrid(f);
-  }));
-  search.addEventListener('input', ()=> {
-    const q = search.value.trim().toLowerCase();
-    document.querySelectorAll('.tool-card').forEach(card=>{
-      const text = (card.querySelector('h3').textContent + ' ' + card.querySelector('p').textContent).toLowerCase();
-      card.style.display = text.includes(q) ? '' : 'none';
+    // Tool click -> load in iframe
+    toolList.addEventListener('click', (e) => {
+      const card = e.target.closest('.tool-card');
+      if(!card) return;
+      const src = card.getAttribute('data-src');
+      if(!src) { alert('Tool URL not configured'); return; }
+      frame.src = src;
+      currentToolSrc = src;
+      addRecent(src);
     });
-  });
 
-  function filterGrid(filter){
-    document.querySelectorAll('.tool-card').forEach(card=>{
-      if(filter==='all'){ card.style.display=''; return; }
-      const tags = (card.getAttribute('data-tags')||'').split(',').map(s=>s.trim());
-      card.style.display = tags.includes(filter) ? '' : 'none';
+    // keyboard accessibility: Enter on focused card loads it
+    toolList.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        const card = e.target.closest('.tool-card') || document.activeElement;
+        if(card && card.getAttribute) {
+          const src = card.getAttribute('data-src');
+          if(src) { frame.src = src; currentToolSrc = src; addRecent(src); }
+        }
+      }
     });
-  }
 
-  // close modal on ESC or click outside
-  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') { modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; } });
-  modal.addEventListener('click', (ev)=> { if(ev.target===modal){ modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; } });
-})();
-</script>
+    // Search tools
+    toolSearch.addEventListener('input', () => {
+      const q = toolSearch.value.trim().toLowerCase();
+      document.querySelectorAll('.tool-card').forEach(card => {
+        const text = (card.querySelector('h4').textContent + ' ' + card.querySelector('p').textContent).toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+
+    // Filter quick example
+    document.getElementById('filterText').addEventListener('click', () => {
+      document.querySelectorAll('.tool-card').forEach(card => {
+        card.style.display = (card.dataset.tags||'').includes('text') ? '' : 'none';
+      });
+    });
+
+    // Quick input actions
+    sendToTool.addEventListener('click', () => {
+      const text = quickInput.value.trim();
+      if(!text) return alert('Paste some text to send.');
+      // send postMessage to iframe. Tool pages should listen for this message.
+      if(frame.contentWindow){
+        frame.contentWindow.postMessage({ type: 'summarizer:prefill', text }, '*');
+        addSnippet(text);
+      } else {
+        alert('No tool loaded. Click a tool to load it first.');
+      }
+    });
+
+    loadTool.addEventListener('click', () => {
+      // If the search input looks like a URL, load it directly; otherwise try to open the top matched tool
+      const q = toolSearch.value.trim();
+      if(q.startsWith('http')) {
+        frame.src = q;
+        currentToolSrc = q;
+        addRecent(q);
+        return;
+      }
+      // find first visible tool-card
+      const first = Array.from(document.querySelectorAll('.tool-card')).find(c => c.style.display !== 'none');
+      if(first) { frame.src = first.dataset.src; currentToolSrc = first.dataset.src; addRecent(first.dataset.src); }
+      else alert('No tool found. Try clearing the search.');
+    });
+
+    clearInput.addEventListener('click', () => { quickInput.value = ''; });
+
+    // Open current tool in new tab
+    openNewTab.addEventListener('click', () => {
+      if(!currentToolSrc) return alert('No tool loaded.');
+      window.open(currentToolSrc, '_blank');
+    });
+
+    // Theme toggle; save preference
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('light');
+      const isLight = document.documentElement.classList.contains('light');
+      themeToggle.setAttribute('aria-pressed', String(isLight));
+      localStorage.setItem('sa_theme', isLight ? 'light' : 'dark');
+    });
+    // restore theme
+    if(localStorage.getItem('sa_theme') === 'light') document.documentElement.classList.add('light');
+
+    // PostMessage listener for messages from tools (optional)
+    window.addEventListener('message', (ev) => {
+      try {
+        const d = ev.data || {};
+        // example: tool can notify host that it produced a summary
+        if(d && d.type === 'sa:result' && d.summary) {
+          // store summary snippet in recent/snippets
+          addSnippet(d.summary);
+          // optionally show a notification
+          console.log('Tool result received:', d.summary.slice(0,120));
+        }
+      } catch(e){ /* ignore */ }
+    }, false);
+
+    // Make iframe visually flush: when loading, remove inner header if tool supports host-controlled mode
+    frame.addEventListener('load', () => {
+      try {
+        // try to tell the tool it's embedded (tool should hide its outer chrome when receives this)
+        frame.contentWindow.postMessage({ type: 'sa:embedded', value: true }, '*');
+      } catch(e){}
+    });
+
+    // Accessibility: keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        toolSearch.focus();
+      }
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        sendToTool.click();
+      }
+    });
+  </script>
 </body>
 </html>
