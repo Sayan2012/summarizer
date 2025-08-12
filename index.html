@@ -1,128 +1,69 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SummarizeAI — Minimal · Professional AI Tools</title>
-<meta name="description" content="SummarizeAI — clean, fast AI tools. Try the Summarizer, see usage stats, and join the beta." />
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SummarizeAI — Tools</title>
+<meta name="description" content="SummarizeAI — an elegant suite of lightweight AI tools."/>
 <style>
-  :root{
-    --bg:#0f1720;            /* deep neutral */
-    --panel:#0f1720;
-    --muted:#94a3b8;
-    --accent:#0ea5ff;        /* soft cyan-blue */
-    --glass: rgba(255,255,255,0.04);
-    --glass-2: rgba(255,255,255,0.02);
-    --card-radius:14px;
-    --max-width:1120px;
-    --ease: cubic-bezier(.2,.9,.3,1);
-  }
-  /* Reset & base */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background: radial-gradient(1200px 600px at 10% 10%, rgba(14,165,255,0.06), transparent 8%),
-                linear-gradient(180deg, #07101a 0%, #0f1720 60%);
-    color:#e6eef6;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.45;
-  }
+:root{
+  --bg:#0f1720; --muted:#94a3b8; --accent:#0ea5ff; --glass:rgba(255,255,255,0.03);
+  --card-radius:12px; --max-width:1120px; --ease:cubic-bezier(.2,.9,.3,1);
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{
+  margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(14,165,255,0.04), transparent 8%),
+              linear-gradient(180deg,#07101a 0%, #0f1720 60%);
+  color:#e6eef6;-webkit-font-smoothing:antialiased;line-height:1.45;
+}
+.wrap{max-width:var(--max-width);margin:0 auto;padding:36px 22px}
 
-  .wrap{max-width:var(--max-width);margin:0 auto;padding:40px 24px}
+/* header */
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6ee7b7);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04293a}
+.brand h1{margin:0;font-size:1rem}
+.nav{display:flex;gap:12px;align-items:center}
+.nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px}
+.searchbar{margin-top:18px;display:flex;gap:12px;align-items:center}
+.searchbar input{
+  flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);
+  background:transparent;color:inherit;font-size:0.95rem;
+}
+.filters{display:flex;gap:8px}
 
-  /* Header */
-  header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-  .brand{display:flex;gap:14px;align-items:center}
-  .logo{
-    width:48px;height:48px;border-radius:10px;
-    background:linear-gradient(135deg,var(--accent), #6ee7b7 120%);
-    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(2,6,23,0.6);
-    font-weight:700;color:#04293a;font-size:20px;
-  }
-  .brand h1{font-size:1.05rem;margin:0;font-weight:600}
-  .nav{display:flex;gap:14px;align-items:center}
-  .nav a{color:var(--muted);text-decoration:none;font-size:0.95rem;padding:8px;border-radius:10px}
-  .nav a:hover{color:var(--accent);background:var(--glass)}
+/* hero condensed */
+.hero-compact{display:flex;gap:18px;align-items:center;justify-content:space-between;margin-top:18px}
+.hero-compact .lead{max-width:680px}
+.lead h2{margin:0;font-size:1.6rem}
+.lead p{margin:6px 0 0;color:var(--muted)}
 
-  /* Hero split */
-  .hero{
-    display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:28px;
-  }
-  .hero-left h2{font-size:2.1rem;margin:0 0 12px 0;font-weight:700;color:#fff}
-  .hero-left p{color:var(--muted);margin:0 0 18px}
-  .cta-row{display:flex;gap:12px;align-items:center}
-  .btn{
-    background:linear-gradient(90deg,var(--accent), #60a5fa);
-    color:#05223a;padding:12px 18px;border-radius:10px;border:0;font-weight:600;cursor:pointer;
-    box-shadow:0 8px 24px rgba(14,165,255,0.12);
-    transition:transform .18s var(--ease), box-shadow .18s var(--ease);
-  }
-  .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);}
-  .btn:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(2,6,23,0.5)}
+/* tool grid */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px}
+.tool-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease);
+  cursor:pointer;
+}
+.tool-card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,0.5)}
+.tool-card h3{margin:0 0 6px 0}
+.tool-card p{margin:0;color:var(--muted);font-size:0.95rem}
+.tool-meta{display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:space-between}
+.badge{font-size:0.78rem;color:var(--muted);padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
 
-  .hero-right{
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:14px;padding:18px;
-    border:1px solid rgba(255,255,255,0.03);
-    box-shadow: 0 8px 30px rgba(2,6,23,0.5);
-    backdrop-filter: blur(6px);
-  }
-  /* mini demo box */
-  .mini-demo{display:flex;flex-direction:column;gap:10px}
-  .mini-demo textarea{width:100%;height:110px;border-radius:10px;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit;resize:vertical}
-  .mini-demo .actions{display:flex;gap:8px;align-items:center;justify-content:space-between}
-  .mini-demo .meta{color:var(--muted);font-size:0.85rem}
+/* modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.8));z-index:60}
+.modal.open{display:flex}
+.modal-inner{width:min(1100px,96vw);height:min(760px,92vh);background:#071018;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 40px 120px rgba(2,6,23,0.7)}
+.modal .toolbar{display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.01)}
+.modal iframe{width:100%;height:calc(100% - 46px);border:0;background:#fff}
 
-  /* Cards/features */
-  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-    border-radius:var(--card-radius);padding:18px;border:1px solid rgba(255,255,255,0.03);
-    transition:transform .22s var(--ease), box-shadow .22s var(--ease);
-  }
-  .card:hover{transform:translateY(-10px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
-  .card h4{margin:0 0 8px 0;color:#fff}
-  .card p{margin:0;color:var(--muted);font-size:0.95rem}
-
-  /* stats / counters */
-  .stats{display:flex;gap:18px;align-items:center;margin-top:28px}
-  .stat{background:var(--glass);padding:14px;border-radius:12px;min-width:160px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
-  .stat .num{font-size:1.4rem;font-weight:700;color:#fff}
-  .stat .lbl{font-size:0.88rem;color:var(--muted)}
-
-  /* testimonials */
-  .testimonials{display:flex;gap:16px;margin-top:26px;align-items:center}
-  .testimonials .quote{flex:1;background:var(--glass-2);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-  .testimonials p{margin:0;color:var(--muted)}
-  .testimonial-author{margin-top:10px;font-weight:600;color:#fff;font-size:0.9rem}
-
-  /* footer */
-  footer{margin-top:40px;padding:28px 0;border-top:1px solid rgba(255,255,255,0.02);color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-
-  /* modal for iframe demo */
-  .modal{
-    position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.8));z-index:60;
-  }
-  .modal.open{display:flex}
-  .modal-inner{width:min(1100px,96vw);height:min(760px,92vh);background:#071018;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 40px 120px rgba(2,6,23,0.7)}
-  .modal .toolbar{display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.01)}
-  .modal iframe{width:100%;height:calc(100% - 46px);border:0;background:#fff}
-
-  /* responsive */
-  @media (max-width:920px){
-    .hero{grid-template-columns:1fr;gap:18px}
-    .features{grid-template-columns:repeat(2,1fr)}
-  }
-  @media (max-width:640px){
-    .features{grid-template-columns:1fr}
-    .brand h1{display:none}
-    .nav{display:none}
-    header{padding-bottom:8px}
-  }
+/* responsive */
+@media (max-width:720px){
+  .hero-compact{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -130,177 +71,148 @@
     <header>
       <div class="brand">
         <div class="logo" aria-hidden>SA</div>
-        <div>
-          <h1>SummarizeAI</h1>
-          <div style="font-size:0.85rem;color:var(--muted)">Minimal · Professional AI tools</div>
-        </div>
+        <div><h1>SummarizeAI</h1><div style="font-size:0.85rem;color:var(--muted)">AI tools hub</div></div>
       </div>
-
-      <nav class="nav" aria-label="Main">
+      <nav class="nav">
         <a href="#tools">Tools</a>
-        <a href="#demo">Try</a>
-        <a href="#about">About</a>
+        <a href="#demo">Demo</a>
       </nav>
     </header>
 
-    <!-- HERO -->
-    <section class="hero" id="top" role="region" aria-label="Intro">
-      <div class="hero-left">
-        <h2>AI tools that are fast, private, and built to scale</h2>
-        <p>Start with a powerful summarizer designed for clarity. Add more tools later — all under one polished, secure platform.</p>
-
-        <div class="cta-row">
-          <button class="btn" id="open-demo">Try Live Demo</button>
-          <button class="btn secondary" id="cta-join">Join Beta</button>
-        </div>
-
-        <!-- small stats -->
-        <div class="stats" aria-hidden>
-          <div class="stat"><div class="num" data-target="12480">0</div><div class="lbl">summaries</div></div>
-          <div class="stat"><div class="num" data-target="2480">0</div><div class="lbl">active users</div></div>
-          <div class="stat"><div class="num" data-target="98">0</div><div class="lbl">avg. quality</div></div>
-        </div>
-      </div>
-
-      <!-- right: refined demo card -->
-      <aside class="hero-right" id="demo" aria-label="Quick demo">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-weight:700">Quick Summarize</div>
-          <div style="font-size:0.85rem;color:var(--muted)">No signup required</div>
-        </div>
-
-        <div class="mini-demo" style="margin-top:12px">
-          <textarea id="demo-input" placeholder="Paste a paragraph or two (or click Try Live Demo) — then open the tool to see the full result."></textarea>
-          <div class="actions">
-            <div class="meta">Max 1000 words • Private</div>
-            <div style="display:flex;gap:8px">
-              <button class="btn" id="demo-open">Open Tool</button>
-              <button class="btn secondary" id="demo-copy">Copy</button>
-            </div>
+    <section class="hero-compact">
+      <div class="lead">
+        <h2>Multiple AI tools — same polished experience</h2>
+        <p>Try tools directly from this page. Click any card to open the tool in a modal for a seamless experience.</p>
+        <div class="searchbar" style="margin-top:12px">
+          <input id="search" placeholder="Search tools e.g. summarize, paraphrase, translate..." />
+          <div class="filters">
+            <button class="badge" data-filter="all">All</button>
+            <button class="badge" data-filter="text">Text</button>
+            <button class="badge" data-filter="language">Language</button>
           </div>
         </div>
-      </aside>
-    </section>
-
-    <!-- features -->
-    <section style="margin-top:18px" id="tools">
-      <div class="features">
-        <div class="card">
-          <h4>Summarize — fast & accurate</h4>
-          <p>Extract the key points automatically with length presets and tone controls (coming soon).</p>
-        </div>
-        <div class="card">
-          <h4>Privacy-first by design</h4>
-          <p>Client-first processing and transient storage — configure data policy as you grow.</p>
-        </div>
-        <div class="card">
-          <h4>Developer friendly</h4>
-          <p>APIs and webhooks planned — integrate into workflows with minimal friction.</p>
-        </div>
       </div>
-
-      <div class="testimonials">
-        <div class="quote" id="quote-1">
-          <p>"Clean, fast, and consistently useful — our team reduced meeting notes time by 60%."</p>
-          <div class="testimonial-author">— R. Patel, Product Lead</div>
-        </div>
-        <div class="quote" id="quote-2" style="display:none">
-          <p>"The summaries are concise and preserve the key arguments — great for quick reviews."</p>
-          <div class="testimonial-author">— A. Gomez, Editor</div>
-        </div>
+      <div style="min-width:220px;text-align:right">
+        <div style="font-weight:700">Your workspace</div>
+        <div style="color:var(--muted);font-size:0.95rem">Add more tools anytime</div>
       </div>
     </section>
 
-    <footer>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-weight:600">SummarizeAI</div>
-        <div style="font-size:0.9rem;color:var(--muted)">Small, focused tools for better productivity.</div>
-      </div>
+    <section id="tools">
+      <div class="tools" id="toolGrid">
+        <!-- Card format: data-src is iframe URL, data-tags are comma-separated tags -->
+        <div class="tool-card" data-src="https://your-gh-page/summarizer.html" data-tags="text">
+          <h3>Summarizer</h3>
+          <p>Condense long articles into short, readable summaries. Adjustable length & tone coming soon.</p>
+          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Free</div></div>
+        </div>
 
-      <div style="display:flex;gap:12px;align-items:center">
-        <a style="color:var(--muted);text-decoration:none;font-size:0.95rem" href="#privacy">Privacy</a>
-        <a style="color:var(--muted);text-decoration:none;font-size:0.95rem" href="#terms">Terms</a>
+        <div class="tool-card" data-src="https://your-gh-page/paraphraser.html" data-tags="text">
+          <h3>Paraphraser</h3>
+          <p>Rephrase sentences to improve clarity or change tone, while preserving meaning.</p>
+          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        </div>
+
+        <div class="tool-card" data-src="https://your-gh-page/grammar.html" data-tags="text">
+          <h3>Grammar & Proofreader</h3>
+          <p>Fix grammar, punctuation, and style suggestions for crisp writing.</p>
+          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        </div>
+
+        <div class="tool-card" data-src="https://your-gh-page/keywords.html" data-tags="text">
+          <h3>Keyword Extractor</h3>
+          <p>Auto-extract key phrases and topics from text for summaries or SEO ideas.</p>
+          <div class="tool-meta"><div class="badge">Text</div><div class="badge">Coming</div></div>
+        </div>
+
+        <div class="tool-card" data-src="https://your-gh-page/translator.html" data-tags="language">
+          <h3>Translator</h3>
+          <p>Translate text between popular languages with contextual accuracy.</p>
+          <div class="tool-meta"><div class="badge">Language</div><div class="badge">Coming</div></div>
+        </div>
+
+        <!-- add more cards as needed -->
       </div>
+    </section>
+
+    <footer style="margin-top:28px;color:var(--muted);display:flex;justify-content:space-between;align-items:center">
+      <div>© <strong>SummarizeAI</strong> — build cool things</div>
+      <div style="font-size:0.9rem">Privacy • Terms</div>
     </footer>
   </div>
 
-  <!-- modal with iframe -->
+  <!-- modal for tools -->
   <div class="modal" id="modal">
-    <div class="modal-inner" role="dialog" aria-modal="true" aria-label="Summarizer">
+    <div class="modal-inner" role="dialog" aria-modal="true" aria-label="Tool modal">
       <div class="toolbar">
-        <div style="font-weight:600">Summarizer</div>
+        <div id="modalTitle" style="font-weight:600"></div>
         <div style="display:flex;gap:8px">
-          <button class="btn secondary" id="copyToTool">Send input</button>
-          <button class="btn" id="closeModal">Close</button>
+          <button class="badge" id="sendInput">Send demo text</button>
+          <button class="badge" id="closeModal">Close</button>
         </div>
       </div>
-      <!-- Replace the src with your actual summarizer page (GitHub Pages iframe or HF space URL) -->
-      <iframe id="toolFrame" src="summarizer.html" title="Summarizer tool"></iframe>
+      <iframe id="toolFrame" src="" title="Tool"></iframe>
     </div>
   </div>
 
 <script>
-  // small helpers: counters
-  document.addEventListener('DOMContentLoaded', ()=> {
-    document.querySelectorAll('.num').forEach(el=>{
-      const target = +el.dataset.target || 0;
-      let cur = 0;
-      const step = Math.max(1, Math.floor(target / 60));
-      const iv = setInterval(()=>{
-        cur += step;
-        if(cur >= target){cur = target; clearInterval(iv)}
-        el.textContent = cur.toLocaleString();
-      }, 16);
-    });
-
-    // testimonial rotation
-    const q1 = document.getElementById('quote-1'), q2 = document.getElementById('quote-2');
-    let t=0; setInterval(()=>{
-      t = 1-t;
-      q1.style.display = t? 'none':'block';
-      q2.style.display = t? 'block':'none';
-    }, 6000);
-  });
-
-  // modal logic
+(function(){
   const modal = document.getElementById('modal');
-  const openDemo = document.getElementById('open-demo');
-  const closeModal = document.getElementById('closeModal');
-  const demoOpen = document.getElementById('demo-open');
-  const demoInput = document.getElementById('demo-input');
   const toolFrame = document.getElementById('toolFrame');
-  const copyToTool = document.getElementById('copyToTool');
+  const modalTitle = document.getElementById('modalTitle');
+  const closeModal = document.getElementById('closeModal');
+  const sendInput = document.getElementById('sendInput');
 
-  function openModal(){ modal.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeModalFn(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  // open modal on card click
+  document.getElementById('toolGrid').addEventListener('click', (e)=>{
+    let card = e.target.closest('.tool-card');
+    if(!card) return;
+    const src = card.getAttribute('data-src');
+    const title = card.querySelector('h3').textContent;
+    if(!src) return alert('Tool URL not configured.');
+    toolFrame.src = src;
+    modalTitle.textContent = title;
+    modal.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
 
-  openDemo.addEventListener('click', openModal);
-  closeModal.addEventListener('click', closeModalFn);
-  demoOpen.addEventListener('click', openModal);
+  // close modal
+  closeModal.addEventListener('click', ()=>{ modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; });
 
-  // copy -> clipboard
-  document.getElementById('demo-copy').addEventListener('click', ()=>{
-    navigator.clipboard.writeText(demoInput.value || '').then(()=> {
-      const el = document.getElementById('demo-copy');
-      el.textContent = 'Copied'; setTimeout(()=>el.textContent='Copy',1400);
+  // send demo text: postMessage to iframe (works only if iframe page listens)
+  sendInput.addEventListener('click', ()=>{
+    const demoText = prompt('Paste the text you want to send to the tool:') || '';
+    try { toolFrame.contentWindow.postMessage({type:'summarizer:prefill', text: demoText}, '*'); }
+    catch(e){ console.warn('postMessage failed', e); }
+  });
+
+  // simple search/filter
+  const search = document.getElementById('search');
+  const badges = document.querySelectorAll('[data-filter]');
+  badges.forEach(b=> b.addEventListener('click', ()=> {
+    const f = b.getAttribute('data-filter');
+    filterGrid(f);
+  }));
+  search.addEventListener('input', ()=> {
+    const q = search.value.trim().toLowerCase();
+    document.querySelectorAll('.tool-card').forEach(card=>{
+      const text = (card.querySelector('h3').textContent + ' ' + card.querySelector('p').textContent).toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
     });
   });
 
-  // "Send input" -> tries to postMessage into the iframe (works only if the iframe content listens)
-  copyToTool.addEventListener('click', ()=>{
-    try{
-      toolFrame.contentWindow.postMessage({type:'summarizer:prefill', text: demoInput.value}, '*');
-    }catch(e){
-      console.warn('Could not send message to iframe:', e);
-    }
-  });
+  function filterGrid(filter){
+    document.querySelectorAll('.tool-card').forEach(card=>{
+      if(filter==='all'){ card.style.display=''; return; }
+      const tags = (card.getAttribute('data-tags')||'').split(',').map(s=>s.trim());
+      card.style.display = tags.includes(filter) ? '' : 'none';
+    });
+  }
 
-  // click outside to close
-  modal.addEventListener('click', (ev)=> { if(ev.target===modal) closeModalFn(); });
-
-  // Accessibility: close with ESC
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModalFn(); });
+  // close modal on ESC or click outside
+  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') { modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; } });
+  modal.addEventListener('click', (ev)=> { if(ev.target===modal){ modal.classList.remove('open'); toolFrame.src=''; document.body.style.overflow=''; } });
+})();
 </script>
-
 </body>
 </html>
