@@ -1,66 +1,230 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Summarizer</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Tools — Minimal Hub</title>
+<meta name="description" content="Minimalist workspace for AI tools — Summarizer, Paraphraser, Translator and more." />
+<style>
+  :root{
+    --bg: #0b1220;
+    --panel: rgba(255,255,255,0.02);
+    --muted: #98a8b9;
+    --accent: #42a5ff;
+    --card-radius: 12px;
+    --maxw: 1100px;
+    --ease: cubic-bezier(.2,.9,.3,1);
+  }
+  /* Basic reset */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+    radial-gradient(800px 360px at 8% 10%, rgba(66,165,255,0.03), transparent 6%),
+    linear-gradient(180deg,#07101a 0%,var(--bg) 60%);color:#e9f1f8;-webkit-font-smoothing:antialiased}
+  .container{max-width:var(--maxw);margin:28px auto;padding:20px}
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      animation: fadeInDown 1s ease;
-    }
+  /* Header / Hero */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7ee0b6);display:flex;align-items:center;justify-content:center;color:#04293a;font-weight:700}
+  .brand h1{margin:0;font-size:1.05rem}
+  .tag{color:var(--muted);font-size:0.92rem;margin-top:6px}
 
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-      color: #666;
-      animation: fadeIn 2s ease;
-    }
+  /* Hero area */
+  .hero{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+  .hero h2{font-size:1.8rem;margin:0;color:#fff;letter-spacing:-0.4px;animation:fadeDown .6s ease}
+  .hero p{margin:0;color:var(--muted);max-width:760px;animation:fadeIn .9s ease}
 
-    iframe {
-      width: 90%;
-      height: 70vh;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      animation: fadeInUp 1.5s ease;
-    }
+  /* Tool grid */
+  .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:22px}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03);
+    transition:transform .18s var(--ease),box-shadow .18s var(--ease);
+    cursor:pointer;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,0.5)}
+  .card h3{margin:0 0 6px 0;font-size:1.02rem}
+  .card p{margin:0;color:var(--muted);font-size:0.92rem}
+  .meta{display:flex;gap:8px;margin-top:12px;align-items:center}
+  .badge{font-size:0.78rem;color:var(--muted);padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+  .live{color:#9ef0c6;background:transparent}
 
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  /* Footer small */
+  footer{margin-top:26px;color:var(--muted);font-size:0.9rem;text-align:center;padding-bottom:28px}
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  /* Modal workspace */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85));z-index:80}
+  .modal.open{display:flex}
+  .ws{width:min(1100px,96vw);height:min(780px,92vh);background:transparent;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--panel);border-radius:10px 10px 0 0;border:1px solid rgba(255,255,255,0.03)}
+  .toolbar .title{font-weight:700}
+  .toolbar .actions{display:flex;gap:8px;align-items:center}
+  .tool-btn{background:linear-gradient(90deg,var(--accent), #60a5fa);color:#04293a;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+  .tool-btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+  .frame-wrap{flex:1;background:#fff;border-radius:0 0 12px 12px;overflow:hidden;display:flex;flex-direction:column}
+  .frame-wrap iframe{flex:1;border:0;width:100%;height:100%;background:transparent}
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
+  /* Loader */
+  .loader{width:36px;height:36px;border-radius:50%;border:4px solid rgba(0,0,0,0.06);border-top-color:var(--accent);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fadeDown {from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn {from{opacity:0}to{opacity:1}}
+
+  /* Responsive */
+  @media (max-width:860px){
+    .hero h2{font-size:1.5rem}
+    .frame-wrap{height:60vh}
+  }
+</style>
 </head>
 <body>
-  <h1>AI Summarizer</h1>
-  <p>Minimalist AI tool to summarize text</p>
+  <div class="container">
+    <header>
+      <div class="brand" aria-hidden>
+        <div class="logo">SA</div>
+        <div>
+          <h1>SummarizeAI</h1>
+          <div class="tag">Minimal AI tools — start simple, scale later</div>
+        </div>
+      </div>
+      <div>
+        <button id="openAll" class="tool-btn secondary" title="Open hub settings">Settings</button>
+      </div>
+    </header>
 
-  <!-- Hugging Face summarizer inside iframe -->
-  <iframe src="https://sayanaiai-aiprojects.hf.space/" title="AI Summarizer"></iframe>
+    <main class="hero" role="main">
+      <h2>Your AI tools, one minimalist workspace</h2>
+      <p>Click a tool to open it in the workspace. Start with the Summarizer — more tools can be added later.</p>
+
+      <section class="tools" aria-label="Available tools">
+        <!-- Summarizer (live) -->
+        <article class="card" data-src="https://sayanaiai-aiprojects.hf.space/" aria-label="Summarizer">
+          <div>
+            <h3>Summarizer</h3>
+            <p>Condense long articles, meeting notes, or reports into clear, short summaries.</p>
+            <div class="meta"><span class="badge">Text</span><span class="badge live">Live</span></div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--muted)">Click to open</div>
+        </article>
+
+        <!-- Paraphraser (placeholder) -->
+        <article class="card" data-src="" aria-label="Paraphraser">
+          <div>
+            <h3>Paraphraser</h3>
+            <p>Rephrase sentences to change tone or clarity. (Coming soon)</p>
+            <div class="meta"><span class="badge">Text</span><span class="badge">Soon</span></div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--muted)">Coming soon</div>
+        </article>
+
+        <!-- Grammar (placeholder) -->
+        <article class="card" data-src="" aria-label="Grammar">
+          <div>
+            <h3>Grammar & Proofreader</h3>
+            <p>Fix grammar, punctuation and style. (Coming soon)</p>
+            <div class="meta"><span class="badge">Text</span><span class="badge">Soon</span></div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--muted)">Coming soon</div>
+        </article>
+
+        <!-- Translator (placeholder) -->
+        <article class="card" data-src="" aria-label="Translator">
+          <div>
+            <h3>Translator</h3>
+            <p>Translate text between languages with context-awareness. (Coming soon)</p>
+            <div class="meta"><span class="badge">Language</span><span class="badge">Soon</span></div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--muted)">Coming soon</div>
+        </article>
+
+        <!-- Keywords (placeholder) -->
+        <article class="card" data-src="" aria-label="Keyword Extractor">
+          <div>
+            <h3>Keyword Extractor</h3>
+            <p>Auto-extract important phrases and topics for SEO or summaries. (Coming soon)</p>
+            <div class="meta"><span class="badge">Text</span><span class="badge">Soon</span></div>
+          </div>
+          <div style="font-size:0.85rem;color:var(--muted)">Coming soon</div>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <div style="text-align:center;color:var(--muted)">© SummarizeAI — build once, iterate often</div>
+    </footer>
+  </div>
+
+  <!-- Modal workspace -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="ws" role="dialog" aria-modal="true" aria-label="Tool workspace">
+      <div class="toolbar">
+        <div class="title" id="toolTitle">Tool</div>
+        <div class="actions">
+          <button id="openNew" class="tool-btn secondary">Open in new tab</button>
+          <button id="close" class="tool-btn">Close</button>
+        </div>
+      </div>
+
+      <div class="frame-wrap">
+        <div style="display:flex;align-items:center;justify-content:center;padding:14px;background:var(--panel);border-bottom:1px solid rgba(0,0,0,0.04)">
+          <div id="loader" class="loader" aria-hidden="true" style="display:none"></div>
+        </div>
+        <iframe id="toolFrame" src="" title="Tool iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // card -> open modal with iframe
+  const modal = document.getElementById('modal');
+  const toolFrame = document.getElementById('toolFrame');
+  const toolTitle = document.getElementById('toolTitle');
+  const openNew = document.getElementById('openNew');
+  const loader = document.getElementById('loader');
+
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const src = card.getAttribute('data-src') || '';
+      const title = card.querySelector('h3').textContent || 'Tool';
+      if(!src){
+        alert('This tool is not yet available.');
+        return;
+      }
+      toolTitle.textContent = title;
+      toolFrame.src = src;
+      openNew.onclick = ()=> window.open(src, '_blank');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      // show loader until iframe loads
+      loader.style.display = 'block';
+    });
+  });
+
+  // Close
+  document.getElementById('close').addEventListener('click', ()=> {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    toolFrame.src = '';
+  });
+
+  // iframe load handler
+  toolFrame.addEventListener('load', ()=> {
+    loader.style.display = 'none';
+    // tell iframe it's embedded so inner page can hide its header if it listens
+    try { toolFrame.contentWindow.postMessage({type:'sa:embedded', value:true}, '*'); } catch(e){}
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') { modal.classList.remove('open'); toolFrame.src = ''; } });
+
+  // Accessibility: trap clicks outside modal to close
+  modal.addEventListener('click', (ev)=> { if(ev.target === modal){ modal.classList.remove('open'); toolFrame.src = ''; } });
+
+  // send theme to iframe if necessary (optional)
+  function sendThemeToFrame() {
+    const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    try { toolFrame.contentWindow.postMessage({type:'sa:theme', theme}, '*'); } catch(e){}
+  }
+</script>
 </body>
 </html>
