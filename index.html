@@ -10,10 +10,10 @@
     --bg:#fbfbfa;
     --muted:#4c4b47;
     --panel:#ffffff;
-    --accentA: #d6f6ef; /* soft teal patch */
-    --accentB: #fff0e1; /* soft peach patch */
-    --accentC: #efe8ff; /* soft lavender patch */
-    --dot:#9fdcc8;      /* small accent */
+    --accentA: #e6f6f0; /* soft teal patch — used very sparingly */
+    --accentB: #fff6ee; /* soft peach patch */
+    --accentC: #f3eeff; /* soft lavender patch */
+    --dot:#a6decf;
     --radius:14px;
     --shadow: 0 18px 40px rgba(20,22,24,0.06);
     --maxw:1100px;
@@ -25,18 +25,11 @@
 
   /* Layout */
   .wrap{max-width:var(--maxw);margin:40px auto;padding:28px;display:flex;flex-direction:column;gap:18px;position:relative}
-  /* Soft organic background patches (sparse) */
-  .bg-shape {
-    position:absolute; z-index:-1; pointer-events:none; filter:blur(36px); opacity:0.95;
-  }
-  .s1{width:420px;height:320px;left:-80px;top:-60px;background:radial-gradient(circle at 30% 30%, var(--accentA), transparent 40%);transform:rotate(-8deg)}
-  .s2{width:480px;height:340px;right:-100px;bottom:-80px;background:radial-gradient(circle at 60% 40%, var(--accentB), transparent 36%);transform:rotate(6deg)}
-  .s3{width:320px;height:320px;left:10%;bottom:-120px;background:radial-gradient(circle at 60% 60%, var(--accentC), transparent 36%);}
 
-  /* Top mini nav (tiny icons only) */
+  /* top mini nav: subtle mark and tiny actions */
   .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
   .mark {
-    width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accentC),var(--accentA));
+    width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accentC),var(--accentA));
     box-shadow:0 6px 26px rgba(20,22,24,0.06);
     display:flex;align-items:center;justify-content:center;
   }
@@ -44,80 +37,118 @@
   .icon-btn{width:36px;height:36px;border-radius:10px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
   .icon-btn:hover{background:rgba(0,0,0,0.03)}
 
-  /* Center area: an airy composition — no big boxed title */
-  .center-area{display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px}
-  .hero-visual{width:160px;height:160px;border-radius:38px;background:linear-gradient(135deg,rgba(255,255,255,0.4),transparent);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-  .hero-visual .core{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,var(--accentC),var(--accentA));box-shadow:0 8px 22px rgba(20,22,24,0.06)}
-  .subtle-line{height:6px;width:120px;border-radius:999px;background:linear-gradient(90deg,var(--dot),transparent);opacity:0.95}
+  /* the central composition — clean & airy, no boxed text */
+  .center-area{display:flex;flex-direction:column;align-items:center;gap:18px;padding:18px}
+  .visual-wrap{display:flex;gap:12px;align-items:center;flex-direction:column}
+  .visual-surface{width:140px;height:140px;border-radius:32px;background:linear-gradient(135deg,rgba(255,255,255,0.45),transparent);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  .visual-core{width:70px;height:70px;border-radius:16px;background:linear-gradient(135deg,var(--accentC),var(--accentA));box-shadow:0 8px 22px rgba(20,22,24,0.06);transform:translateY(0);transition:transform .8s cubic-bezier(.2,.9,.3,1)}
 
-  /* tagline minimal (single line only; optional) */
-  .tiny-tag{font-size:0.95rem;color:var(--muted);opacity:0.88;text-align:center;max-width:700px;line-height:1.5}
+  /* animated headline (modern, compact) */
+  .headline-row{display:flex;align-items:center;gap:10px;flex-direction:column;text-align:center}
+  .headline{font-size:1.3rem;margin:0;color:#22282a;line-height:1.15}
+  .headline .muted{font-weight:500;color:rgba(64,64,61,0.72);font-size:0.95rem;margin-top:6px}
 
-  /* Floating tool capsules (not cards) */
-  .capsules{
-    display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px;
+  /* rotating keywords animation — small, modern */
+  .kw {
+    display:inline-block;
+    position:relative;
+    height:1.05em; /* keeps layout stable when words switch */
+    overflow:hidden;
+    vertical-align:middle;
   }
+  .kw > span {
+    position:absolute; left:0; right:0; top:0;
+    opacity:0; transform:translateY(100%);
+    animation:kwCycle 9s linear infinite 0s;
+  }
+  .kw > span:nth-child(1){ animation-delay: 0s; }
+  .kw > span:nth-child(2){ animation-delay: 3s; }
+  .kw > span:nth-child(3){ animation-delay: 6s; }
+  @keyframes kwCycle {
+    0%   { opacity:0; transform:translateY(100%); }
+    5%   { opacity:1; transform:translateY(0%); }
+    30%  { opacity:1; transform:translateY(0%); }
+    35%  { opacity:0; transform:translateY(-100%); }
+    100% { opacity:0; transform:translateY(-100%); }
+  }
+
+  /* Floating tool capsules — fresh, pill-like (not boxes) */
+  .capsules{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px}
   .capsule{
-    min-width:200px;max-width:320px;padding:14px 16px;border-radius:999px;background:linear-gradient(180deg,var(--panel),#fff);
+    min-width:200px;max-width:320px;padding:14px 16px;border-radius:999px;background:var(--panel);
     border:1px solid rgba(20,20,20,0.03);box-shadow:0 8px 28px rgba(18,20,22,0.04);
-    display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .18s cubic-bezier(.2,.9,.3,1),box-shadow .18s;
+    display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .22s cubic-bezier(.2,.9,.3,1),box-shadow .22s;
+    will-change:transform;
   }
-  .capsule:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(18,20,22,0.06)}
-  .capsule .logo-dot{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accentA),var(--accentC));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .capsule:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 22px 50px rgba(18,20,22,0.06)}
+  .capsule:focus{outline:3px solid rgba(160,210,190,0.18);outline-offset:4px}
+  .logo-dot{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accentA),var(--accentC));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(20,22,24,0.06)}
   .capsule h4{margin:0;font-size:1rem;color:#22262a}
   .capsule p{margin:4px 0 0 0;font-size:0.88rem;color:rgba(64,64,61,0.72)}
 
-  /* footer minimal */
+  /* small footer */
   footer{margin-top:16px;text-align:center;color:rgba(16,16,16,0.38);font-size:0.9rem;padding-bottom:24px}
 
-  /* Modal viewer - subtle */
+  /* modal viewer — subtle & modern */
   .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,8,8,0.28);z-index:80;padding:18px}
   .modal.open{display:flex}
-  .viewer{width:min(1020px,96vw);height:min(780px,92vh);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#fff,#fcfcfc);box-shadow:0 24px 60px rgba(12,14,16,0.18);border:1px solid rgba(8,8,8,0.04);display:flex;flex-direction:column}
-  .viewer .vhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(12,12,12,0.04)}
-  .viewer .vhead .title{font-weight:700;color:#1c2a27}
-  .viewer .vhead .controls{display:flex;gap:8px}
+  .viewer{width:min(1020px,96vw);height:min(740px,92vh);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#fff,#fcfcfc);box-shadow:0 24px 60px rgba(12,14,16,0.18);border:1px solid rgba(8,8,8,0.04);display:flex;flex-direction:column}
+  .vhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(12,12,12,0.04)}
+  .vhead .title{font-weight:700;color:#1c2a27}
+  .vhead .controls{display:flex;gap:8px}
   .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:transparent;color:var(--muted)}
   .btn.close{background:linear-gradient(90deg,var(--accentB),var(--accentC));color:#2b1b0f}
-
   .iframe-area{flex:1;background:#fff;display:flex;flex-direction:column}
   .iframe-area iframe{flex:1;border:0;width:100%;height:100%}
 
-  /* small loader */
+  /* loader dot */
   .dotpulse{width:12px;height:12px;border-radius:999px;background:var(--dot);opacity:0;animation:dotPulse 1.1s infinite;margin-right:8px}
   @keyframes dotPulse{0%{opacity:0.2;transform:scale(.9)}50%{opacity:1;transform:scale(1.08)}100%{opacity:0.2;transform:scale(.9)}}
+
+  /* small interactive flourish: gentle bob for the visual core */
+  @keyframes bob { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+  .visual-core.animate { animation: bob 6s ease-in-out infinite; }
 
   /* responsive tweaks */
   @media (max-width:720px){
     .capsule{min-width:160px;padding:12px}
-    .hero-visual{width:120px;height:120px}
+    .visual-surface{width:110px;height:110px}
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- decorative shapes -->
-    <div class="bg-shape s1"></div>
-    <div class="bg-shape s2"></div>
-    <div class="bg-shape s3"></div>
-
-    <!-- top mini nav: mark and actions -->
-    <div class="topbar">
+    <!-- top minimal nav / mark -->
+    <div class="topbar" aria-hidden>
       <div style="display:flex;align-items:center;gap:12px">
-        <div class="mark" aria-hidden></div>
+        <div class="mark" title="SummarizeAI mark"></div>
       </div>
-      <div class="tiny-actions" aria-hidden>
-        <button class="icon-btn" title="Settings" onclick="openAbout()">☼</button>
+      <div class="tiny-actions">
+        <button class="icon-btn" title="About" onclick="openAbout()">☼</button>
       </div>
     </div>
 
-    <!-- center composition: no boxed title, no heavy text -->
+    <!-- center composition -->
     <div class="center-area" role="main" aria-label="Tool hub">
-      <div class="hero-visual" aria-hidden><div class="core"></div></div>
-      <div class="subtle-line" aria-hidden></div>
-      <div class="tiny-tag">Useful small tools — quick to open, easy to close. Click a capsule to try.</div>
+      <div class="visual-wrap" aria-hidden>
+        <div class="visual-surface">
+          <div class="visual-core" id="visualCore"></div>
+        </div>
+      </div>
 
-      <!-- capsules: tool pills -->
+      <!-- Modern animated short line (replaces old tagged box) -->
+      <div class="headline-row" aria-hidden>
+        <div class="headline">Small tools. Big clarity.</div>
+        <div class="muted headline">
+          Focused on speed — <span class="kw" aria-hidden>
+            <span>Summarize faster</span>
+            <span>Read less, know more</span>
+            <span>Save time today</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- capsules -->
       <div class="capsules" role="list">
         <div class="capsule" data-src="https://sayanaiai-aiprojects.hf.space/" role="listitem" tabindex="0">
           <div class="logo-dot" aria-hidden></div>
@@ -128,7 +159,7 @@
         </div>
 
         <div class="capsule" data-src="" role="listitem" tabindex="0">
-          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentB),var(--accentC));"></div>
+          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentB),var(--accentC));" aria-hidden></div>
           <div>
             <h4>Paraphraser</h4>
             <p>Rewrite text in different tones. (coming)</p>
@@ -136,7 +167,7 @@
         </div>
 
         <div class="capsule" data-src="" role="listitem" tabindex="0">
-          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentC),var(--accentA));"></div>
+          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentC),var(--accentA));" aria-hidden></div>
           <div>
             <h4>Translator</h4>
             <p>Fast contextual translations. (coming)</p>
@@ -144,7 +175,7 @@
         </div>
 
         <div class="capsule" data-src="" role="listitem" tabindex="0">
-          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentA),var(--accentB));"></div>
+          <div class="logo-dot" style="background:linear-gradient(135deg,var(--accentA),var(--accentB));" aria-hidden></div>
           <div>
             <h4>Keywords</h4>
             <p>Extract key phrases from text. (coming)</p>
@@ -156,7 +187,7 @@
     <footer>© SummarizeAI</footer>
   </div>
 
-  <!-- modal viewer -->
+  <!-- viewer modal -->
   <div class="modal" id="modal" aria-hidden="true">
     <div class="viewer" role="dialog" aria-modal="true">
       <div class="vhead">
@@ -177,7 +208,7 @@
   </div>
 
 <script>
-  // click capsule -> open modal with iframe
+  // gentle interactions
   const modal = document.getElementById('modal');
   const frame = document.getElementById('frame');
   const vtitle = document.getElementById('vtitle');
@@ -185,6 +216,10 @@
   const closeBtn = document.getElementById('closeBtn');
   const dot = document.getElementById('dot');
   const note = document.getElementById('note');
+  const visualCore = document.getElementById('visualCore');
+
+  // make visual-core bob slowly for life
+  setTimeout(()=> visualCore.classList.add('animate'), 600);
 
   document.querySelectorAll('.capsule').forEach(c=>{
     c.addEventListener('click', ()=> openCapsule(c));
@@ -212,7 +247,7 @@
     try{ frame.contentWindow.postMessage({type:'sa:embedded', value:true}, '*'); }catch(e){}
   });
 
-  function openAbout(){ alert('Small, useful AI tools — built to be simple.'); }
+  function openAbout(){ alert('Small useful tools — built for clarity.'); }
 </script>
 </body>
 </html>
