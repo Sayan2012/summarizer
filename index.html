@@ -5,124 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Hub</title>
   <style>
-    /* Background with a subtle but slightly more intense gradient */
     body {
+      font-family: "Poppins", sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f0f4ff, #e3f0ff, #f9e9ff);
-      background-attachment: fixed;
-      color: #333;
+      padding: 0;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      text-align: center;
     }
 
+    /* Header Box */
     header {
-      padding: 2rem 1rem;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 20px;
-      margin-top: 1.5rem;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(8px);
-    }
-
-    header h1 {
-      font-size: 2.8rem;
-      margin: 0;
-      background: linear-gradient(90deg, #6a5acd, #00bfff, #ff69b4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 600;
       letter-spacing: 1px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
     }
 
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
-      color: #444;
-    }
-
-    .tools-container {
-      margin: 3rem 1rem;
+    /* Tool Cards */
+    .tools {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
       width: 90%;
-      max-width: 1100px;
+      margin-top: 40px;
+      padding: 10px;
     }
 
     .tool {
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 500;
       cursor: pointer;
-      backdrop-filter: blur(6px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+      transition: all 0.3s ease-in-out;
     }
 
     .tool:hover {
-      transform: translateY(-7px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+      transform: translateY(-5px);
+      background: linear-gradient(135deg, #d4fc79, #96e6a1);
+      color: #333;
     }
 
-    .tool h2 {
-      margin: 0;
-      font-size: 1.6rem;
-      background: linear-gradient(90deg, #007fff, #ff6ec7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    /* Floating Window (Modal) */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: white;
+      width: 500px;
+      max-width: 90%;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease-in-out;
     }
 
-    .tool p {
-      margin-top: 0.8rem;
-      color: #555;
-      font-size: 1rem;
+    .modal.active {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    footer {
-      margin-top: auto;
-      padding: 1.5rem;
-      font-size: 0.95rem;
-      color: #555;
-      background: rgba(255, 255, 255, 0.6);
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
-      backdrop-filter: blur(6px);
+    .modal h2 {
+      margin-top: 0;
+      color: #444;
+      font-size: 1.8rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .modal textarea {
       width: 100%;
+      height: 120px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .modal button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .modal button:hover {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    /* Overlay background */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>AI Hub</h1>
-    <p>Your central place for powerful AI tools</p>
-  </header>
 
-  <main class="tools-container">
-    <div class="tool" onclick="openTool('text-analyzer')">
-      <h2>Text Analyzer</h2>
-      <p>Dive deep into text insights and summaries.</p>
-    </div>
-    <div class="tool" onclick="openTool('code-helper')">
-      <h2>Code Helper</h2>
-      <p>Get instant assistance with code generation and fixes.</p>
-    </div>
-    <div class="tool" onclick="openTool('chat-ai')">
-      <h2>Chat AI</h2>
-      <p>Engage with an intelligent conversational assistant.</p>
-    </div>
-  </main>
+  <header>AI Hub</header>
 
-  <footer>
-    <p>© 2025 AI Hub. All rights reserved.</p>
-  </footer>
+  <div class="tools">
+    <div class="tool" onclick="openModal('summarizer')">Summarizer</div>
+    <div class="tool">Chatbot</div>
+    <div class="tool">Translator</div>
+    <div class="tool">Image Generator</div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay" class="overlay" onclick="closeModal()"></div>
+
+  <!-- Summarizer Modal -->
+  <div id="summarizer" class="modal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2>Summarizer Tool</h2>
+    <textarea placeholder="Paste text to summarize..."></textarea>
+    <button>Summarize</button>
+  </div>
 
   <script>
-    function openTool(toolName) {
-      alert("Opening " + toolName + "...");
+    function openModal(id) {
+      document.getElementById(id).classList.add("active");
+      document.getElementById("overlay").classList.add("active");
+    }
+
+    function closeModal() {
+      document.querySelectorAll(".modal").forEach(m => m.classList.remove("active"));
+      document.getElementById("overlay").classList.remove("active");
     }
   </script>
+
 </body>
 </html>
