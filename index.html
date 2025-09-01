@@ -1,180 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Hub</title>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Hub — Minimal</title>
+<meta name="description" content="AI Hub — minimal, subtle, modern hub for small AI tools." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-a: #f6f9ff;
+    --bg-b: #fff7fb;
+    --accent: #6fbf9a;      /* gentle accent */
+    --text: #0f1a18;
+    --muted: #56605f;
+    --card-radius: 14px;
+    --glass: rgba(255,255,255,0.6);
+    --outline: rgba(12,14,15,0.06);
+    --shadow: 0 18px 50px rgba(12,14,16,0.08);
+    --maxw: 1100px;
+    --ease: cubic-bezier(.2,.9,.26,1);
+  }
 
-    /* Header Box */
-    header {
-      width: 100%;
-      padding: 20px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased;background:
+    radial-gradient(900px 360px at 8% 6%, rgba(111,191,154,0.03), transparent 8%),
+    linear-gradient(180deg,var(--bg-a) 0%, var(--bg-b) 100%);}
 
-    /* Tool Cards */
-    .tools {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      width: 90%;
-      margin-top: 40px;
-      padding: 10px;
-    }
+  /* Container */
+  .wrap{max-width:var(--maxw);margin:36px auto;padding:22px;display:flex;flex-direction:column;gap:20px}
 
-    .tool {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
-      transition: all 0.3s ease-in-out;
-    }
+  /* header: subtle card */
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.88),rgba(255,255,255,0.95));box-shadow:0 8px 30px rgba(12,14,16,0.04);border:1px solid var(--outline)
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:46px;height:46px;border-radius:10px;
+    background:linear-gradient(135deg, rgba(111,191,154,0.18), rgba(129,189,238,0.12));
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--text)
+  }
+  .brand .title{font-weight:800;font-size:1rem;letter-spacing:-0.3px}
+  .header-actions{display:flex;gap:8px;align-items:center}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--outline);background:transparent;color:var(--muted);font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent}
+  .btn.small{padding:6px 10px;font-size:0.9rem}
 
-    .tool:hover {
-      transform: translateY(-5px);
-      background: linear-gradient(135deg, #d4fc79, #96e6a1);
-      color: #333;
-    }
+  /* hero */
+  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:8px 12px}
+  .hero h1{margin:0;font-size:1.8rem;font-weight:800;letter-spacing:-0.4px}
+  .hero p{margin:0;color:var(--muted);font-weight:600;max-width:820px}
 
-    /* Floating Window (Modal) */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: white;
-      width: 500px;
-      max-width: 90%;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      z-index: 1000;
-      opacity: 0;
-      transition: all 0.3s ease-in-out;
-    }
+  /* layout: left column (tools) + right column (info) on wide screens */
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+  @media (max-width:960px){ .layout{grid-template-columns:1fr; } }
 
-    .modal.active {
-      display: block;
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
+  /* Tools list (grid) */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media (max-width:720px){ .tools-grid{grid-template-columns:1fr} }
 
-    .modal h2 {
-      margin-top: 0;
-      color: #444;
-      font-size: 1.8rem;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
+  /* primary tile */
+  .tile-primary{
+    border-radius:14px; padding:18px; min-height:220px; display:flex;flex-direction:column;gap:10px; justify-content:flex-start;
+    background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96)); border:1px solid var(--outline); box-shadow:var(--shadow);
+    cursor:pointer; transition: transform .32s var(--ease), box-shadow .32s var(--ease);
+  }
+  .tile-primary:hover{ transform: translateY(-8px); box-shadow: 0 28px 68px rgba(12,14,16,0.12); }
+  .tile-primary .kicker{font-weight:800;font-size:1.02rem}
+  .tile-primary p{margin:0;color:var(--muted);font-weight:600}
 
-    .modal textarea {
-      width: 100%;
-      height: 120px;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      resize: none;
-      font-size: 1rem;
-      margin-bottom: 15px;
-    }
+  /* secondary small tiles */
+  .small-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media (max-width:720px){ .small-tiles{grid-template-columns:1fr} }
+  .tile-small{
+    padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.97));border:1px solid var(--outline);cursor:pointer;
+    transition: transform .26s var(--ease), box-shadow .26s var(--ease;
+  }
+  .tile-small:hover{ transform: translateY(-6px); box-shadow:0 18px 42px rgba(12,14,16,0.08); }
+  .tile-small h4{margin:0;font-weight:700}
+  .tile-small p{margin:6px 0 0 0;color:var(--muted);font-weight:600}
 
-    .modal button {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
+  /* right column: info / quick links */
+  .panel{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.97));border:1px solid var(--outline);box-shadow:0 8px 26px rgba(12,14,16,0.04)}
+  .panel h3{margin:0 0 8px 0;font-weight:800}
+  .links{display:flex;flex-direction:column;gap:8px}
+  .link{padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(12,14,16,0.04);font-weight:700;color:var(--muted);cursor:pointer;text-align:left}
 
-    .modal button:hover {
-      background: linear-gradient(135deg, #764ba2, #667eea);
-    }
+  /* modal window: slide-up + soft rounded */
+  .overlay{position:fixed;inset:0;background:rgba(8,8,8,0.32);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .28s ease}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .modal{
+    position:fixed;left:50%;bottom:-100vh;transform:translateX(-50%);width:min(980px,96vw);height:72vh;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:0 36px 100px rgba(8,10,12,0.18);border:1px solid var(--outline);overflow:hidden;transition:bottom .36s var(--ease);
+  }
+  .modal.open{ bottom:6vh; }
+  .modal .m-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.04) }
+  .modal .m-head .title{font-weight:800}
+  .modal .m-body{height:calc(72vh - 64px);display:flex;min-height:220px}
+  .modal iframe{flex:1;border:0;width:100%;height:100%;background:transparent}
 
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: #666;
-    }
+  /* small controls */
+  .m-actions{display:flex;gap:8px;align-items:center}
+  .m-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--outline);background:transparent;cursor:pointer;font-weight:700}
 
-    /* Overlay background */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: 999;
-    }
+  /* little underline hover animation on headings */
+  .underline { position:relative; display:inline-block }
+  .underline::after{ content:""; position:absolute; left:0; bottom:-6px; height:3px; width:0; background:linear-gradient(90deg,var(--accent), #8fc3f7); border-radius:3px; transition:width .28s var(--ease) }
+  .tile-primary:hover .underline::after, .tile-small:hover .underline::after { width:36% }
 
-    .overlay.active {
-      display: block;
-    }
-  </style>
+  /* fine tune typography */
+  h1,h2,h3,h4 { margin:0 }
+  p { margin:0 }
+
+  /* responsive tweaks */
+  @media (max-width:640px){
+    .hero h1{font-size:1.4rem}
+    header{padding:10px}
+    .layout{grid-template-columns:1fr}
+    .modal.open{ bottom:3vh; height:78vh }
+  }
+</style>
 </head>
 <body>
+  <div class="wrap">
+    <header role="banner">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div class="brand" style="display:flex;align-items:center;gap:12px">
+          <div class="logo" aria-hidden>AH</div>
+          <div>
+            <div class="title">AI Hub</div>
+            <div style="font-size:12px;color:var(--muted);font-weight:700">small tools — focused results</div>
+          </div>
+        </div>
 
-  <header>AI Hub</header>
+        <div class="header-actions">
+          <button class="btn small" onclick="openAbout()">About</button>
+          <button class="btn small" onclick="openHistory()">History</button>
+        </div>
+      </div>
+    </header>
 
-  <div class="tools">
-    <div class="tool" onclick="openModal('summarizer')">Summarizer</div>
-    <div class="tool">Chatbot</div>
-    <div class="tool">Translator</div>
-    <div class="tool">Image Generator</div>
+    <section class="hero" role="region" aria-label="intro">
+      <h1>Minimal. Clean. Useful.</h1>
+      <p>Quickly open single-purpose AI tools inside a smooth window — nothing extra, designed to feel calm and modern.</p>
+    </section>
+
+    <main class="layout" role="main">
+      <!-- Left: tools -->
+      <div>
+        <div class="tools-grid" aria-label="tools">
+          <!-- Primary summarizer tile -->
+          <div class="tile-primary" id="summTile" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button" aria-pressed="false" aria-label="Open Summarizer">
+            <div class="kicker underline">Summarizer</div>
+            <p>Condense long articles, meeting notes, or transcripts into clear summaries. Click to open a smooth in-page window.</p>
+            <div style="margin-top:auto;display:flex;gap:10px;align-items:center">
+              <span style="font-size:0.9rem;color:var(--muted);font-weight:700">Open tool</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="#8daaa0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5l7 7-7 7" stroke="#8daaa0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <!-- small tiles -->
+          <div class="small-tiles">
+            <div class="tile-small" tabindex="0" role="button" aria-label="Paraphraser">
+              <h4 class="underline">Paraphraser</h4>
+              <p>Rewrite text in different tones. (coming)</p>
+            </div>
+
+            <div class="tile-small" tabindex="0" role="button" aria-label="Translator">
+              <h4 class="underline">Translator</h4>
+              <p>Context-aware translations for short text. (coming)</p>
+            </div>
+
+            <div class="tile-small" tabindex="0" role="button" aria-label="Keywords">
+              <h4 class="underline">Keywords</h4>
+              <p>Extract key phrases and topics. (coming)</p>
+            </div>
+
+            <div class="tile-small" tabindex="0" role="button" aria-label="Proofreader">
+              <h4 class="underline">Proofreader</h4>
+              <p>Quick grammar & clarity fixes. (coming)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: info panel -->
+      <aside class="panel" aria-label="information">
+        <h3>How it works</h3>
+        <p style="margin-top:8px;color:var(--muted)">Click a tool tile to open a secure, embedded window inside the page. The Summarizer will load your Hugging Face Space and run there — data stays on that service unless you route otherwise.</p>
+
+        <div style="margin-top:16px;font-weight:800;color:var(--muted);">Quick links</div>
+        <div class="links" style="margin-top:10px">
+          <button class="link" onclick="openInNew('https://sayanaiai-aiprojects.hf.space/')">Open Summarizer (new tab)</button>
+          <button class="link" onclick="openAbout()">About</button>
+          <button class="link" onclick="openHistory()">History</button>
+        </div>
+      </aside>
+    </main>
+
+    <footer style="text-align:center;color:var(--muted);padding-top:8px;font-weight:700">© AI Hub</footer>
   </div>
 
-  <!-- Overlay -->
-  <div id="overlay" class="overlay" onclick="closeModal()"></div>
-
-  <!-- Summarizer Modal -->
-  <div id="summarizer" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <h2>Summarizer Tool</h2>
-    <textarea placeholder="Paste text to summarize..."></textarea>
-    <button>Summarize</button>
+  <!-- overlay + modal -->
+  <div id="overlay" class="overlay" aria-hidden="true" onclick="closeModal()"></div>
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="m-head">
+      <div style="display:flex;flex-direction:column">
+        <div class="title" id="modalTitle">Tool</div>
+        <div style="font-size:12px;color:var(--muted)" id="modalSub">Embedded tool</div>
+      </div>
+      <div class="m-actions">
+        <button class="m-btn" id="openTabBtn">Open in new tab</button>
+        <button class="m-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+    <div class="m-body" id="modalBody">
+      <!-- iframe will be attached here dynamically -->
+      <iframe id="toolFrame" src="" title="Tool frame" loading="lazy"></iframe>
+    </div>
   </div>
 
-  <script>
-    function openModal(id) {
-      document.getElementById(id).classList.add("active");
-      document.getElementById("overlay").classList.add("active");
-    }
+<script>
+  // Basic behavior: open modal + load iframe (Summarizer tile)
+  const overlay = document.getElementById('overlay');
+  const modal = document.getElementById('modal');
+  const toolFrame = document.getElementById('toolFrame');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSub = document.getElementById('modalSub');
+  const openTabBtn = document.getElementById('openTabBtn');
 
-    function closeModal() {
-      document.querySelectorAll(".modal").forEach(m => m.classList.remove("active"));
-      document.getElementById("overlay").classList.remove("active");
-    }
-  </script>
+  // Primary summ tile
+  const summTile = document.getElementById('summTile');
+  summTile.addEventListener('click', ()=> openToolFromTile(summTile));
+  summTile.addEventListener('keydown', (e)=> { if(e.key === 'Enter') openToolFromTile(summTile); });
 
+  function openToolFromTile(tile){
+    const url = tile.dataset.src || '';
+    const title = tile.querySelector('.kicker') ? tile.querySelector('.kicker').textContent : (tile.querySelector('h4') ? tile.querySelector('h4').textContent : 'Tool');
+    if(!url) return alert('Tool not configured.');
+    openModal(url, title, tile.querySelector('p') ? tile.querySelector('p').textContent : '');
+  }
+
+  function openModal(url, title='Tool', sub=''){
+    // set text
+    modalTitle.textContent = title;
+    modalSub.textContent = sub;
+    // set iframe src
+    toolFrame.src = url;
+    openTabBtn.onclick = ()=> window.open(url, '_blank');
+    // show
+    overlay.classList.add('open');
+    modal.classList.add('open');
+    overlay.setAttribute('aria-hidden','false');
+    modal.setAttribute('aria-hidden','false');
+    // focus trap fallback: focus iframe container
+    toolFrame.focus();
+  }
+
+  function closeModal(){
+    overlay.classList.remove('open');
+    modal.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    modal.setAttribute('aria-hidden','true');
+    // unload iframe (to stop compute/connection)
+    toolFrame.src = '';
+  }
+
+  // utility: open in new tab helper
+  function openInNew(u){ if(!u) return alert('No url'); window.open(u,'_blank') }
+
+  // placeholders for About/History
+  function openAbout(){ alert('AI Hub — minimal tools.'); }
+  function openHistory(){ alert('No history yet.'); }
+
+  // close on escape
+  window.addEventListener('keydown', (e)=> {
+    if(e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+
+  // overlay click handled via onclick attribute
+</script>
 </body>
 </html>
