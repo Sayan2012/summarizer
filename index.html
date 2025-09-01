@@ -3,389 +3,224 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AI Hub — Cool Layout</title>
-<meta name="description" content="AI Hub — modern, animated layout for small AI tools." />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>AI Hub — Minimal</title>
+<meta name="description" content="Minimal hub for small AI tools." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-a:#f5f8ff;
-    --bg-b:#fbf6ff;
-    --accent-1: #6dd3b6;   /* mint */
-    --accent-2: #7fb3ff;   /* sky */
-    --accent-3: #ffc28b;   /* apricot */
-    --text: #0f1614;
-    --muted: #50605f;
-    --glass: rgba(255,255,255,0.6);
-    --card-radius:16px;
-    --maxw:1200px;
-    --ease: cubic-bezier(.16,.9,.3,1);
+    --bg1: #fbfdff;
+    --bg2: #f1f6f9;
+    --text: #123032;
+    --muted: #556868;
+    --accent: linear-gradient(90deg,#89e0c9,#9fd7ff);
+    --card-radius: 12px;
+    --pill-radius: 999px;
+    --drawer-h: 68vh;
+    --maxw: 1100px;
+    --ease: cubic-bezier(.2,.9,.3,1);
   }
 
+  /* reset */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--text);
-    background:
-      radial-gradient(800px 360px at 6% 8%, rgba(127,207,189,0.04), transparent 6%),
-      radial-gradient(700px 320px at 88% 88%, rgba(127,179,255,0.03), transparent 8%),
-      linear-gradient(180deg,var(--bg-a) 0%, var(--bg-b) 100%);
-    -webkit-font-smoothing:antialiased;
-  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
 
-  /* Page container */
-  .wrap{max-width:var(--maxw);margin:34px auto;padding:18px;display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
+  /* page */
+  .wrap{max-width:var(--maxw);margin:40px auto;padding:20px;display:flex;flex-direction:column;gap:18px;align-items:stretch}
 
-  /* Left sidebar (minimal) */
-  .sidebar{
-    position:relative;
-    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
-    border-radius:14px;
-    padding:18px;
-    border:1px solid rgba(10,12,12,0.04);
-    box-shadow: 0 10px 30px rgba(14,18,20,0.04);
-    height:calc(100vh - 80px);
-    min-height:520px;
-    display:flex;flex-direction:column;gap:14px;
-  }
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:48px;height:48px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:#063033}
+  h1{margin:0;font-size:1.2rem;letter-spacing:-0.2px}
+  .subtitle{color:var(--muted);font-size:0.95rem}
 
-  .logo{
-    display:flex;align-items:center;gap:12px;
-  }
-  .logo .mark{
-    width:52px;height:52px;border-radius:12px;
-    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
-    display:flex;align-items:center;justify-content:center;color:#042a24;font-weight:800;box-shadow:0 8px 26px rgba(12,18,20,0.06);
-  }
-  .logo h2{margin:0;font-size:1.05rem;letter-spacing:-0.3px}
-
-  .nav{
-    margin-top:8px;display:flex;flex-direction:column;gap:8px;
-  }
-  .nav button{
-    text-align:left;padding:10px 12px;border-radius:10px;border:0;background:transparent;color:var(--muted);font-weight:700;cursor:pointer;
-  }
-  .nav button.active{background:linear-gradient(90deg, rgba(127,207,189,0.12), rgba(127,179,255,0.06)); color:var(--text) }
-
-  .side-foot{margin-top:auto;color:var(--muted);font-size:0.9rem}
-
-  /* Main area */
-  .main{
-    display:flex;flex-direction:column;gap:18px;
-  }
-
-  /* Top hero / quick */
-  .hero{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-radius:14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
-    border:1px solid rgba(10,12,12,0.04);
-    box-shadow:0 12px 36px rgba(12,14,16,0.04);
-  }
-  .hero-left{display:flex;flex-direction:column;gap:6px}
-  .hero h1{margin:0;font-size:1.4rem;letter-spacing:-0.3px}
-  .hero p{margin:0;color:var(--muted);font-weight:600}
-
-  .hero-right{display:flex;gap:8px;align-items:center}
-  .search{
-    border-radius:999px;padding:8px 12px;border:1px solid rgba(10,12,12,0.04);background:transparent;min-width:300px;color:var(--muted)
-  }
-  .btn{padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent-2),var(--accent-1));color:#03201b;font-weight:800;cursor:pointer;box-shadow:0 10px 28px rgba(12,18,20,0.06)}
-
-  /* Grid of tools — cool cards with parallax tilt */
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  /* tools grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
   .card{
-    border-radius:14px;padding:18px;position:relative;
-    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.98));
+    background:rgba(255,255,255,0.95);
+    border-radius:var(--card-radius);
+    padding:16px;
     border:1px solid rgba(10,12,12,0.04);
-    box-shadow: 0 8px 28px rgba(12,14,16,0.04);
-    transform-style:preserve-3d; perspective:1000px; cursor:pointer; overflow:hidden;
-    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+    box-shadow: 0 6px 18px rgba(12,14,16,0.04);
+    cursor:pointer;
+    transition:transform .18s var(--ease), box-shadow .18s var(--ease);
+    display:flex;flex-direction:column;gap:8px;
   }
-  .card:hover{box-shadow:0 26px 70px rgba(12,14,16,0.09); transform: translateY(-8px) }
+  .card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(12,14,16,0.06)}
+  .card h3{margin:0;font-size:1rem}
+  .card p{margin:0;color:var(--muted);font-size:0.9rem}
 
-  .card .badge{
-    position:absolute;right:12px;top:12px;font-weight:700;padding:6px 10px;border-radius:999px;font-size:0.82rem;color:rgba(10,12,12,0.8);
-    background:linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7)); border:1px solid rgba(10,12,12,0.03);
+  /* subtle tag */
+  .tag{margin-left:auto;padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem;color:var(--muted);background:rgba(0,0,0,0.03)}
+
+  /* footer */
+  footer{margin-top:20px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:20px}
+
+  /* bottom drawer (minimal) */
+  .drawer {
+    position:fixed;left:0;right:0;bottom:0;height:0;
+    background:linear-gradient(180deg,#ffffff,#fbfdff);
+    border-top-left-radius:14px;border-top-right-radius:14px;
+    box-shadow:0 -18px 60px rgba(12,14,16,0.12);
+    overflow:hidden;transition:height .32s var(--ease), transform .32s var(--ease);
+    z-index:1100; display:flex;flex-direction:column;
   }
+  .drawer.open{height:var(--drawer-h)}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(10,12,12,0.04)}
+  .drawer-title{font-weight:700}
+  .drawer-controls{display:flex;gap:10px;align-items:center}
+  .drawer-frame{flex:1;border:0;width:100%}
 
-  .card h3{margin:0;font-size:1.05rem}
-  .card p{margin:10px 0 0 0;color:var(--muted);font-weight:600}
+  /* minimal buttons */
+  .btn{padding:10px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--muted)}
+  .btn.primary{background:var(--accent);color:#063033}
 
-  /* decorative accent stripes */
-  .accent-strip{
-    height:10px;width:100%;position:absolute;left:0;bottom:0;display:flex;
-  }
-  .accent-strip span{flex:1;opacity:.95}
+  /* small spinner */
+  .spinner{width:12px;height:12px;border-radius:999px;background:linear-gradient(90deg,#9fd7ff,#89e0c9);opacity:0.9}
 
-  .s1{background:linear-gradient(90deg,var(--accent-1),rgba(255,255,255,0.1))}
-  .s2{background:linear-gradient(90deg,var(--accent-2),rgba(255,255,255,0.1))}
-  .s3{background:linear-gradient(90deg,var(--accent-3),rgba(255,255,255,0.1))}
-
-  /* Featured big area */
-  .featured{
-    margin-top:6px;border-radius:14px;padding:18px;display:flex;gap:18px;align-items:center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
-    border:1px solid rgba(10,12,12,0.04);
-  }
-  .featured .left{flex:1}
-  .featured .right{width:420px;max-width:100%;display:flex;justify-content:flex-end}
-
-  /* Floating window (cool in-page tool view) */
-  .viewer-wrap{
-    position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.9);
-    width:min(920px,94vw);height:72vh;border-radius:14px;overflow:hidden;z-index:120;
-    background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,255,0.98));
-    box-shadow:0 40px 120px rgba(10,14,18,0.18);border:1px solid rgba(10,12,12,0.06);
-    opacity:0;pointer-events:none;transition:opacity .28s var(--ease), transform .28s var(--ease);
-    display:flex;flex-direction:column;
-  }
-  .viewer-wrap.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
-  .viewer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.04)}
-  .viewer-head .title{font-weight:800}
-  .viewer-body{flex:1;display:flex;overflow:hidden}
-  .viewer-frame{flex:1;border:0;background:transparent}
-  .viewer-side{width:320px;border-left:1px solid rgba(0,0,0,0.04);padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.99));display:flex;flex-direction:column;gap:12px}
-  .viewer-side h4{margin:0}
-  .viewer-side p{margin:0;color:var(--muted);font-weight:600}
-
-  .viewer-actions{display:flex;gap:8px;margin-top:auto}
-  .btn.ghost{background:transparent;border:1px solid rgba(10,12,12,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;font-weight:700}
-
-  /* spinner */
-  .spinner{width:36px;height:36px;border-radius:999px;border:4px solid rgba(0,0,0,0.08);border-top-color:var(--accent-2);animation:spin 1s linear infinite;margin-left:8px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* small responsive */
-  @media (max-width:980px){
-    .wrap{grid-template-columns:1fr; padding:12px}
-    .sidebar{height:auto;min-height:160px}
-    .grid{grid-template-columns:repeat(2,1fr)}
-    .viewer-side{display:none}
-  }
-  @media (max-width:640px){
-    .grid{grid-template-columns:1fr}
-    .hero-right .search{min-width:160px}
+  /* responsive */
+  @media (max-width:720px){
+    .drawer.open{height:78vh}
+    .logo{width:40px;height:40px}
+    h1{font-size:1rem}
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- LEFT SIDEBAR -->
-    <aside class="sidebar" aria-label="Navigation">
-      <div class="logo">
-        <div class="mark">AH</div>
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden>AH</div>
         <div>
-          <h2>AI Hub</h2>
-          <div style="color:var(--muted);font-size:0.9rem;margin-top:4px">Tools for quick wins</div>
+          <h1>AI Hub</h1>
+          <div class="subtitle">Small tools — one simple place</div>
         </div>
       </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="btn" onclick="openAbout()">About</button>
+        <button class="btn" onclick="openHistory()">History</button>
+      </div>
+    </header>
 
-      <nav class="nav" aria-label="Main navigation">
-        <button class="active">Overview</button>
-        <button>Docs</button>
-        <button>Pricing</button>
-        <button>Roadmap</button>
-        <button>Contact</button>
-      </nav>
-
-      <div style="margin-top:8px;color:var(--muted);font-size:0.95rem">Quick tips: click a card → view → open tool</div>
-
-      <div class="side-foot">© AI Hub</div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
-      <!-- HERO -->
-      <section class="hero" aria-label="Hero">
-        <div class="hero-left">
-          <h1 style="margin:0">Fast tools. Delightful UI.</h1>
-          <p>Interactive, modern surface — open tools inside a floating window and try them inline.</p>
-        </div>
-
-        <div class="hero-right">
-          <input class="search" placeholder="Search tools..." aria-label="Search tools">
-          <button class="btn" id="openHub">Explore</button>
-        </div>
-      </section>
-
-      <!-- FEATURED -->
-      <section class="featured" aria-label="Featured">
-        <div class="left">
-          <strong style="font-size:1.1rem;display:block">Featured</strong>
-          <div style="color:var(--muted);margin-top:6px">Try the Summarizer — opens as a smooth in-page window that loads your live tool.</div>
-        </div>
-        <div class="right">
-          <button class="btn" id="trySumm">Open Summarizer</button>
-        </div>
-      </section>
-
-      <!-- GRID -->
-      <section class="grid" aria-label="Tools grid">
-        <!-- Card 1: Summarizer (loads iframe inside viewer) -->
-        <article class="card" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button" aria-pressed="false">
-          <div class="badge">Live</div>
-          <h3>Summarizer</h3>
-          <p>Condense long articles, notes or transcripts into concise summaries. Click to view details or open inline.</p>
-          <div class="accent-strip" aria-hidden>
-            <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+    <main>
+      <section class="grid" aria-label="Tools">
+        <div class="card" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button" aria-pressed="false">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#e6fff6,#e6f4ff)"></div>
+            <div style="flex:1">
+              <h3>Summarizer</h3>
+              <p>Condense articles or notes into clean summaries.</p>
+            </div>
+            <div class="tag">Live</div>
           </div>
-        </article>
+        </div>
 
-        <article class="card" data-src="" tabindex="0" role="button">
-          <div class="badge">Soon</div>
-          <h3>Paraphraser</h3>
-          <p>Rewrite text with tone and clarity options (coming soon).</p>
-          <div class="accent-strip" aria-hidden><span class="s3"></span><span class="s1"></span><span class="s2"></span></div>
-        </article>
+        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#fff8e6,#ffdcb0)"></div>
+            <div style="flex:1">
+              <h3>Paraphraser</h3>
+              <p>Rewrite text in different tones. (coming)</p>
+            </div>
+            <div class="tag">Soon</div>
+          </div>
+        </div>
 
-        <article class="card" data-src="" tabindex="0" role="button">
-          <div class="badge">Soon</div>
-          <h3>Translator</h3>
-          <p>Quick contextual translations for short passages (coming soon).</p>
-          <div class="accent-strip" aria-hidden><span class="s2"></span><span class="s3"></span><span class="s1"></span></div>
-        </article>
+        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#f6e9ff,#e7d6ff)"></div>
+            <div style="flex:1">
+              <h3>Translator</h3>
+              <p>Context-aware translations. (coming)</p>
+            </div>
+            <div class="tag">Soon</div>
+          </div>
+        </div>
 
-        <article class="card" data-src="" tabindex="0" role="button">
-          <div class="badge">Soon</div>
-          <h3>Keywords</h3>
-          <p>Extract important phrases for summaries and SEO (coming soon).</p>
-          <div class="accent-strip" aria-hidden><span class="s1"></span><span class="s2"></span><span class="s3"></span></div>
-        </article>
-
-        <article class="card" data-src="" tabindex="0" role="button">
-          <div class="badge">Soon</div>
-          <h3>Proofreader</h3>
-          <p>Fast grammar and clarity fixes (coming soon).</p>
-          <div class="accent-strip" aria-hidden><span class="s2"></span><span class="s1"></span><span class="s3"></span></div>
-        </article>
-
-        <article class="card" data-src="" tabindex="0" role="button">
-          <div class="badge">Soon</div>
-          <h3>Playground</h3>
-          <p>Experiment with micro-tools — add your own links as you build.</p>
-          <div class="accent-strip" aria-hidden><span class="s3"></span><span class="s1"></span><span class="s2"></span></div>
-        </article>
+        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#e9fbff,#cfeaff)"></div>
+            <div style="flex:1">
+              <h3>Keywords</h3>
+              <p>Extract important phrases for summaries or SEO.</p>
+            </div>
+            <div class="tag">Soon</div>
+          </div>
+        </div>
       </section>
     </main>
+
+    <footer><small style="color:var(--muted)">© AI Hub</small></footer>
   </div>
 
-  <!-- FLOATING VIEWER (cool window) -->
-  <div id="viewer" class="viewer-wrap" role="dialog" aria-hidden="true" aria-label="Tool viewer">
-    <div class="viewer-head">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:10px;height:10px;border-radius:999px;background:var(--accent-2)"></div>
-        <div class="title" id="viewerTitle">Tool</div>
-      </div>
-      <div>
-        <button id="openNewTab" class="btn btn-ghost btn-small" style="margin-right:8px">Open in tab</button>
-        <button id="closeViewer" class="btn btn-ghost">Close</button>
+  <!-- Bottom drawer viewer -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="drawer-title" id="drawerTitle">Tool</div>
+      <div class="drawer-controls">
+        <button id="openTabBtn" class="btn">Open in tab</button>
+        <button id="closeBtn" class="btn">Close</button>
       </div>
     </div>
-
-    <div class="viewer-body">
-      <iframe id="viewerFrame" class="viewer-frame" src="" title="Tool iframe"></iframe>
-      <aside class="viewer-side" aria-hidden>
-        <h4 id="viewerName">Tool</h4>
-        <p id="viewerDesc" style="color:var(--muted)">Quick info and shortcuts appear here.</p>
-        <div style="height:12px"></div>
-        <div style="display:flex;gap:8px">
-          <button id="reloadBtn" class="btn btn-ghost">Reload</button>
-          <button id="smallOpenTab" class="btn">Open</button>
-        </div>
-        <div style="margin-top:auto;color:var(--muted);font-size:0.9rem">Tip: press ESC to close</div>
-      </aside>
-    </div>
+    <iframe id="drawerFrame" class="drawer-frame" src="" title="Tool workspace"></iframe>
   </div>
 
-  <script>
-    // Parallax tilt effect on cards
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card=>{
-      card.addEventListener('mousemove', (e)=>{
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        const rx = (py - 0.5) * 8; // rotateX
-        const ry = (px - 0.5) * -12; // rotateY
-        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-      });
-      card.addEventListener('mouseleave', ()=> {
-        card.style.transform = '';
-      });
-    });
+<script>
+  // Minimal interaction: click card -> open bottom drawer with iframe.
+  const cards = document.querySelectorAll('.card');
+  const drawer = document.getElementById('drawer');
+  const drawerFrame = document.getElementById('drawerFrame');
+  const drawerTitle = document.getElementById('drawerTitle');
+  const openTabBtn = document.getElementById('openTabBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  let currentUrl = '';
 
-    // Viewer (floating window) logic
-    const viewer = document.getElementById('viewer');
-    const viewerFrame = document.getElementById('viewerFrame');
-    const viewerTitle = document.getElementById('viewerTitle');
-    const viewerName = document.getElementById('viewerName');
-    const viewerDesc = document.getElementById('viewerDesc');
-    const openNewTab = document.getElementById('openNewTab');
-    const smallOpenTab = document.getElementById('smallOpenTab');
-    const closeViewer = document.getElementById('closeViewer');
-    const reloadBtn = document.getElementById('reloadBtn');
-    let currentUrl = '';
-
-    // open viewer with url + meta
-    function openViewer(url, title, desc){
-      if(!url){
-        alert('Tool not configured yet.');
-        return;
-      }
-      currentUrl = url;
-      viewerFrame.src = url;
-      viewerTitle.textContent = title || 'Tool';
-      viewerName.textContent = title || 'Tool';
-      viewerDesc.textContent = desc || '';
-      viewer.classList.add('open');
-      viewer.setAttribute('aria-hidden','false');
+  function openDrawer(url, title){
+    if(!url){
+      alert('This tool is not available yet.');
+      return;
     }
+    currentUrl = url;
+    drawerTitle.textContent = title || 'Tool';
+    // Set iframe src (lazy load)
+    drawerFrame.src = url;
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+  }
 
-    // close viewer
-    function closeViewerFn(){
-      viewer.classList.remove('open');
-      viewer.setAttribute('aria-hidden','true');
-      viewerFrame.src = '';
-      currentUrl = '';
-    }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+    // clear iframe to reduce resource usage
+    drawerFrame.src = '';
+    currentUrl = '';
+  }
 
-    // wire up grid cards to open viewer
-    document.querySelectorAll('.card').forEach(card=>{
-      card.addEventListener('click', ()=>{
-        const url = card.getAttribute('data-src') || '';
-        const title = (card.querySelector('h3') && card.querySelector('h3').textContent) || 'Tool';
-        const desc = (card.querySelector('p') && card.querySelector('p').textContent) || '';
-        openViewer(url, title, desc);
-      });
-      card.addEventListener('keydown', (e)=> { if(e.key === 'Enter') card.click(); });
+  cards.forEach(card=>{
+    card.addEventListener('click', () => {
+      const url = card.getAttribute('data-src') || '';
+      const titleEl = card.querySelector('h3');
+      const title = titleEl ? titleEl.textContent : 'Tool';
+      openDrawer(url, title);
     });
+    card.addEventListener('keydown', (e) => { if(e.key === 'Enter') card.click(); });
+  });
 
-    // featured open button
-    document.getElementById('trySumm').addEventListener('click', ()=> {
-      const summUrl = 'https://sayanaiai-aiprojects.hf.space/';
-      openViewer(summUrl, 'Summarizer', 'Condense long text into concise summaries.');
-    });
+  openTabBtn.addEventListener('click', () => {
+    if(!currentUrl) return alert('No tool loaded.');
+    window.open(currentUrl, '_blank');
+  });
+  closeBtn.addEventListener('click', closeDrawer);
 
-    // viewer controls
-    openNewTab.addEventListener('click', ()=> { if(currentUrl) window.open(currentUrl,'_blank'); });
-    smallOpenTab.addEventListener('click', ()=> { if(currentUrl) window.open(currentUrl,'_blank'); });
-    closeViewer.addEventListener('click', closeViewerFn);
-    reloadBtn.addEventListener('click', ()=> { if(currentUrl) viewerFrame.src = currentUrl; });
+  // close on ESC
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
 
-    // keyboard ESC to close viewer
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape' && viewer.classList.contains('open')) closeViewerFn();
-    });
-
-    // small accessibility: focus trap simple (return focus to last card)
-    let lastFocused = null;
-    document.querySelectorAll('.card, .btn, .nav button').forEach(el=>{
-      el.addEventListener('focus', ()=> lastFocused = el);
-    });
-    closeViewer.addEventListener('click', ()=> { try{ lastFocused && lastFocused.focus(); }catch(e){} });
-
-    // Attach small tooltip-ish spinner while iframe loads
-    viewerFrame.addEventListener('load', ()=> {
-      // we could show a tiny ready state; leaving simple behavior
-      console.log('iframe loaded');
-    });
-  </script>
+  // small helpers
+  function openAbout(){ alert('AI Hub — lightweight tools.'); }
+  function openHistory(){ alert('No history yet.'); }
+</script>
 </body>
 </html>
