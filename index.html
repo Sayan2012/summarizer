@@ -3,224 +3,286 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AI Hub — Minimal</title>
-<meta name="description" content="Minimal hub for small AI tools." />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>AI Hub — Playground</title>
+<meta name="description" content="Playful hub for small AI tools." />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg1: #fbfdff;
-    --bg2: #f1f6f9;
-    --text: #123032;
-    --muted: #556868;
-    --accent: linear-gradient(90deg,#89e0c9,#9fd7ff);
-    --card-radius: 12px;
-    --pill-radius: 999px;
-    --drawer-h: 68vh;
+    --bg-a: #f7fbff;
+    --bg-b: #fff8fb;
+    --accent-1: rgba(159,216,196,0.95); /* mint */
+    --accent-2: rgba(157,188,255,0.95); /* sky */
+    --ink: #0f2320;
+    --muted: #4f6160;
+    --card-radius: 20px;
+    --capsule-radius: 28px;
+    --drawer-h: 66vh;
     --maxw: 1100px;
     --ease: cubic-bezier(.2,.9,.3,1);
   }
 
-  /* reset */
+  /* reset & base */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-
-  /* page */
-  .wrap{max-width:var(--maxw);margin:40px auto;padding:20px;display:flex;flex-direction:column;gap:18px;align-items:stretch}
-
-  /* header */
-  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{width:48px;height:48px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:#063033}
-  h1{margin:0;font-size:1.2rem;letter-spacing:-0.2px}
-  .subtitle{color:var(--muted);font-size:0.95rem}
-
-  /* tools grid */
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:6px}
-  .card{
-    background:rgba(255,255,255,0.95);
-    border-radius:var(--card-radius);
-    padding:16px;
-    border:1px solid rgba(10,12,12,0.04);
-    box-shadow: 0 6px 18px rgba(12,14,16,0.04);
-    cursor:pointer;
-    transition:transform .18s var(--ease), box-shadow .18s var(--ease);
-    display:flex;flex-direction:column;gap:8px;
+  html,body{height:100%;margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink);background:
+    radial-gradient(900px 360px at 8% 12%, rgba(145,205,183,0.06), transparent 6%),
+    linear-gradient(180deg,var(--bg-a) 0%, var(--bg-b) 100%);
+    -webkit-font-smoothing:antialiased;
   }
-  .card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(12,14,16,0.06)}
-  .card h3{margin:0;font-size:1rem}
-  .card p{margin:0;color:var(--muted);font-size:0.9rem}
 
-  /* subtle tag */
-  .tag{margin-left:auto;padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem;color:var(--muted);background:rgba(0,0,0,0.03)}
+  /* page container */
+  .wrap{max-width:var(--maxw);margin:36px auto;padding:20px;display:flex;flex-direction:column;gap:18px;align-items:center}
+
+  /* top intro (minimal) */
+  .intro{
+    width:100%; text-align:center; margin-top:6px;
+  }
+  .title {
+    font-size:2rem; margin:0; font-weight:700; letter-spacing:-0.6px;
+  }
+  .lead { margin-top:8px; color:var(--muted); font-weight:600; max-width:760px; margin-left:auto; margin-right:auto; line-height:1.4; }
+
+  /* sticker cluster */
+  .cluster {
+    display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+    margin-top:22px; width:100%; padding:18px;
+  }
+
+  .capsule {
+    background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+    border-radius:var(--capsule-radius);
+    padding:16px 20px; min-width:220px; max-width:360px;
+    display:flex; gap:12px; align-items:center; cursor:pointer;
+    box-shadow: 0 8px 24px rgba(18,24,20,0.06);
+    border: 1px solid rgba(10,12,12,0.03);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  .capsule:hover { transform: translateY(-8px); box-shadow: 0 26px 60px rgba(18,24,20,0.09); }
+
+  .capsule .swatch {
+    width:46px; height:46px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-weight:700; color:#07221a;
+    box-shadow: 0 8px 20px rgba(18,24,20,0.06);
+  }
+  .sw-mint { background: linear-gradient(135deg,var(--accent-1), #c9f0eb); }
+  .sw-sky  { background: linear-gradient(135deg,var(--accent-2), #d7e7ff); }
+  .sw-rose { background: linear-gradient(135deg,#ffdfe8,#ffc7e0); }
+
+  .cap-main { display:flex; flex-direction:column; gap:4px; flex:1; text-align:left; }
+  .cap-main h4 { margin:0; font-size:1.05rem; font-weight:700; }
+  .cap-main p { margin:0; color:var(--muted); font-weight:600; font-size:0.92rem }
+
+  .cap-action { margin-left:auto; font-weight:700; color:var(--muted); font-size:0.88rem }
+
+  /* small helper row under cluster */
+  .help-row { margin-top:10px; color:var(--muted); font-weight:600; font-size:0.92rem; }
+
+  /* bottom drawer (compact pocket) — chosen UX */
+  .pocket {
+    position:fixed; left:50%; transform:translateX(-50%); bottom:14px;
+    width:min(960px,96vw); height:72px; border-radius:999px; display:flex; overflow:hidden;
+    background: linear-gradient(90deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+    box-shadow: 0 18px 48px rgba(18,24,20,0.10); border:1px solid rgba(10,12,12,0.04);
+    transition: height .28s var(--ease), width .28s var(--ease);
+    z-index:1200;
+  }
+  .pocket.open { height:var(--drawer-h); border-radius:16px; bottom:28px; }
+
+  .pocket-head { flex:0 0 78px; display:flex;align-items:center;gap:12px;padding:12px 16px; border-right:1px solid rgba(10,12,12,0.03) }
+  .pocket-title { font-weight:800 }
+  .pocket-body { flex:1; display:flex; flex-direction:column; min-height:0; } /* for iframe flexing */
+  .pocket-iframe { flex:1; border:0; width:100%; }
+
+  .pocket-controls { display:flex; gap:8px; margin-left:auto; align-items:center }
+  .mini-btn{ background:transparent; border:0; font-weight:700; color:var(--muted); cursor:pointer; padding:8px 10px; border-radius:10px }
+
+  /* close button top-right on expanded pocket */
+  .pocket-close {
+    position:absolute; right:12px; top:10px; background:rgba(255,255,255,0.9); border:0; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:700;
+    box-shadow: 0 8px 20px rgba(18,24,20,0.06);
+  }
+
+  /* tiny loader */
+  .tiny-loader { width:10px; height:10px; border-radius:999px; background:linear-gradient(90deg,#7fd3b3,#8fb7ff); animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%{ transform:scale(.9); opacity:.7 } 50%{ transform:scale(1.15); opacity:1 } 100%{ transform:scale(.9); opacity:.7 } }
 
   /* footer */
-  footer{margin-top:20px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:20px}
+  .footer { margin-top:26px; color:var(--muted); font-weight:600; font-size:0.92rem }
 
-  /* bottom drawer (minimal) */
-  .drawer {
-    position:fixed;left:0;right:0;bottom:0;height:0;
-    background:linear-gradient(180deg,#ffffff,#fbfdff);
-    border-top-left-radius:14px;border-top-right-radius:14px;
-    box-shadow:0 -18px 60px rgba(12,14,16,0.12);
-    overflow:hidden;transition:height .32s var(--ease), transform .32s var(--ease);
-    z-index:1100; display:flex;flex-direction:column;
-  }
-  .drawer.open{height:var(--drawer-h)}
-  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(10,12,12,0.04)}
-  .drawer-title{font-weight:700}
-  .drawer-controls{display:flex;gap:10px;align-items:center}
-  .drawer-frame{flex:1;border:0;width:100%}
-
-  /* minimal buttons */
-  .btn{padding:10px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--muted)}
-  .btn.primary{background:var(--accent);color:#063033}
-
-  /* small spinner */
-  .spinner{width:12px;height:12px;border-radius:999px;background:linear-gradient(90deg,#9fd7ff,#89e0c9);opacity:0.9}
-
-  /* responsive */
-  @media (max-width:720px){
-    .drawer.open{height:78vh}
-    .logo{width:40px;height:40px}
-    h1{font-size:1rem}
+  /* responsive tweaks */
+  @media (max-width:880px){
+    .cluster { gap:10px; }
+    .capsule { min-width:180px; padding:12px 14px; }
+    .pocket { width:94vw; left:50%; transform:translateX(-50%); }
+    .pocket-head { flex:0 0 64px }
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden>AH</div>
-        <div>
-          <h1>AI Hub</h1>
-          <div class="subtitle">Small tools — one simple place</div>
+    <section class="intro" aria-labelledby="mainTitle">
+      <h1 id="mainTitle" class="title">Playful tools — quick wins</h1>
+      <div class="lead">A friendly place for small AI helpers. Click a capsule to open a compact pocket where the tool runs in-page.</div>
+    </section>
+
+    <section class="cluster" aria-label="tools cluster">
+      <div class="capsule" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button">
+        <div class="swatch sw-mint">S</div>
+        <div class="cap-main">
+          <h4>Summarizer</h4>
+          <p>Make long text short and readable — quick and private.</p>
         </div>
+        <div class="cap-action">Try →</div>
       </div>
-      <div style="display:flex;gap:12px;align-items:center">
-        <button class="btn" onclick="openAbout()">About</button>
-        <button class="btn" onclick="openHistory()">History</button>
+
+      <div class="capsule" data-src="" tabindex="0" role="button">
+        <div class="swatch sw-sky">P</div>
+        <div class="cap-main">
+          <h4>Paraphraser</h4>
+          <p>Flip tone & phrasing. (coming)</p>
+        </div>
+        <div class="cap-action">Soon</div>
       </div>
-    </header>
 
-    <main>
-      <section class="grid" aria-label="Tools">
-        <div class="card" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button" aria-pressed="false">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#e6fff6,#e6f4ff)"></div>
-            <div style="flex:1">
-              <h3>Summarizer</h3>
-              <p>Condense articles or notes into clean summaries.</p>
-            </div>
-            <div class="tag">Live</div>
-          </div>
+      <div class="capsule" data-src="" tabindex="0" role="button">
+        <div class="swatch sw-rose">T</div>
+        <div class="cap-main">
+          <h4>Translator</h4>
+          <p>Short context-aware translations. (coming)</p>
         </div>
+        <div class="cap-action">Soon</div>
+      </div>
 
-        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#fff8e6,#ffdcb0)"></div>
-            <div style="flex:1">
-              <h3>Paraphraser</h3>
-              <p>Rewrite text in different tones. (coming)</p>
-            </div>
-            <div class="tag">Soon</div>
-          </div>
+      <div class="capsule" data-src="" tabindex="0" role="button">
+        <div class="swatch sw-sky">K</div>
+        <div class="cap-main">
+          <h4>Keywords</h4>
+          <p>Fast phrase extraction for SEO & summaries. (coming)</p>
         </div>
+        <div class="cap-action">Soon</div>
+      </div>
+    </section>
 
-        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#f6e9ff,#e7d6ff)"></div>
-            <div style="flex:1">
-              <h3>Translator</h3>
-              <p>Context-aware translations. (coming)</p>
-            </div>
-            <div class="tag">Soon</div>
-          </div>
-        </div>
+    <div class="help-row">Tip: open a capsule, then expand the pocket to full view with the ⤢ icon.</div>
 
-        <div class="card" data-src="" tabindex="0" role="button" aria-pressed="false">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,#e9fbff,#cfeaff)"></div>
-            <div style="flex:1">
-              <h3>Keywords</h3>
-              <p>Extract important phrases for summaries or SEO.</p>
-            </div>
-            <div class="tag">Soon</div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer><small style="color:var(--muted)">© AI Hub</small></footer>
+    <div class="footer">© AI Hub — built for quick experiments</div>
   </div>
 
-  <!-- Bottom drawer viewer -->
-  <div id="drawer" class="drawer" aria-hidden="true">
-    <div class="drawer-head">
-      <div class="drawer-title" id="drawerTitle">Tool</div>
-      <div class="drawer-controls">
-        <button id="openTabBtn" class="btn">Open in tab</button>
-        <button id="closeBtn" class="btn">Close</button>
+  <!-- compact pocket (drawer-like, expandable) -->
+  <div id="pocket" class="pocket" aria-hidden="true">
+    <div class="pocket-head" role="toolbar" aria-label="Tool pocket header">
+      <div style="display:flex;flex-direction:column">
+        <div id="pocketTitle" class="pocket-title">Tool</div>
+        <div style="color:var(--muted);font-weight:700;font-size:0.86rem" id="pocketSubtitle">Ready</div>
+      </div>
+
+      <div class="pocket-controls" id="pocketControls">
+        <div class="tiny-loader" id="pocketLoader" style="display:none"></div>
+        <button id="expandBtn" class="mini-btn" title="Expand">⤢</button>
+        <button id="openTab" class="mini-btn" title="Open in new tab">Open</button>
+        <button id="closePocket" class="mini-btn" title="Close">Close</button>
       </div>
     </div>
-    <iframe id="drawerFrame" class="drawer-frame" src="" title="Tool workspace"></iframe>
+
+    <div class="pocket-body">
+      <iframe id="pocketFrame" class="pocket-iframe" src="" title="Tool pocket iframe" loading="lazy"></iframe>
+      <button id="pocketCloseX" class="pocket-close" style="display:none">Close</button>
+    </div>
   </div>
 
 <script>
-  // Minimal interaction: click card -> open bottom drawer with iframe.
-  const cards = document.querySelectorAll('.card');
-  const drawer = document.getElementById('drawer');
-  const drawerFrame = document.getElementById('drawerFrame');
-  const drawerTitle = document.getElementById('drawerTitle');
-  const openTabBtn = document.getElementById('openTabBtn');
-  const closeBtn = document.getElementById('closeBtn');
+  // Minimal JS: clicking a capsule opens the pocket (compact). Expand button increases size.
+  const capsules = document.querySelectorAll('.capsule');
+  const pocket = document.getElementById('pocket');
+  const pocketFrame = document.getElementById('pocketFrame');
+  const pocketTitle = document.getElementById('pocketTitle');
+  const pocketSubtitle = document.getElementById('pocketSubtitle');
+  const openTab = document.getElementById('openTab');
+  const closePocket = document.getElementById('closePocket');
+  const expandBtn = document.getElementById('expandBtn');
+  const pocketLoader = document.getElementById('pocketLoader');
+  const pocketCloseX = document.getElementById('pocketCloseX');
+
   let currentUrl = '';
+  let expanded = false;
 
-  function openDrawer(url, title){
-    if(!url){
-      alert('This tool is not available yet.');
-      return;
-    }
+  function showLoader(on){
+    pocketLoader.style.display = on ? 'block' : 'none';
+  }
+
+  function openPocket(url, title, subtitle){
+    if(!url){ alert('This tool is coming soon.'); return; }
     currentUrl = url;
-    drawerTitle.textContent = title || 'Tool';
-    // Set iframe src (lazy load)
-    drawerFrame.src = url;
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden','false');
+    pocketTitle.textContent = title || 'Tool';
+    pocketSubtitle.textContent = subtitle || '';
+    showLoader(true);
+    pocketFrame.src = url;
+    pocket.classList.add('open');
+    pocket.setAttribute('aria-hidden','false');
+    // once iframe loads, hide loader
+    pocketFrame.addEventListener('load', () => {
+      showLoader(false);
+      // try to notify tool it's embedded
+      try{ pocketFrame.contentWindow.postMessage({ type:'sa:embedded', value:true }, '*'); }catch(e){}
+    }, { once:true });
   }
 
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden','true');
-    // clear iframe to reduce resource usage
-    drawerFrame.src = '';
+  function closePocketFn(){
+    pocket.classList.remove('open');
+    pocket.setAttribute('aria-hidden','true');
+    pocketFrame.src = '';
     currentUrl = '';
+    if(expanded) toggleExpand(false);
   }
 
-  cards.forEach(card=>{
-    card.addEventListener('click', () => {
-      const url = card.getAttribute('data-src') || '';
-      const titleEl = card.querySelector('h3');
-      const title = titleEl ? titleEl.textContent : 'Tool';
-      openDrawer(url, title);
+  function toggleExpand(force){
+    expanded = typeof force === 'boolean' ? force : !expanded;
+    if(expanded){
+      pocket.style.width = 'min(1100px,96vw)';
+      pocket.style.height = '84vh';
+      pocket.style.borderRadius = '16px';
+      pocketCloseX.style.display = 'block';
+      pocketCloseX.focus();
+    } else {
+      pocket.style.width = 'min(960px,96vw)';
+      pocket.style.height = '72px';
+      pocket.style.borderRadius = '999px';
+      pocketCloseX.style.display = 'none';
+    }
+  }
+
+  // wire capsules
+  capsules.forEach(c => {
+    c.addEventListener('click', () => {
+      const url = c.dataset.src || '';
+      const title = c.querySelector('h4') ? c.querySelector('h4').textContent : 'Tool';
+      const sub = c.querySelector('p') ? c.querySelector('p').textContent : '';
+      openPocket(url, title, sub);
     });
-    card.addEventListener('keydown', (e) => { if(e.key === 'Enter') card.click(); });
+    c.addEventListener('keydown', (e) => { if(e.key === 'Enter') c.click(); });
   });
 
-  openTabBtn.addEventListener('click', () => {
+  openTab.addEventListener('click', () => {
     if(!currentUrl) return alert('No tool loaded.');
     window.open(currentUrl, '_blank');
   });
-  closeBtn.addEventListener('click', closeDrawer);
+  closePocket.addEventListener('click', closePocketFn);
+  pocketCloseX.addEventListener('click', closePocketFn);
 
-  // close on ESC
+  expandBtn.addEventListener('click', () => toggleExpand());
+
+  // ESC closes pocket when expanded or open
   document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    if(e.key === 'Escape' && pocket.classList.contains('open')) closePocketFn();
   });
 
-  // small helpers
-  function openAbout(){ alert('AI Hub — lightweight tools.'); }
-  function openHistory(){ alert('No history yet.'); }
+  // initially set pocket compact style
+  toggleExpand(false);
+
+  // accessibility: hide pocket from screen readers when closed
+  const observer = new MutationObserver(()=> {
+    if(pocket.classList.contains('open')) pocket.setAttribute('aria-hidden','false'); else pocket.setAttribute('aria-hidden','true');
+  });
+  observer.observe(pocket, { attributes:true, attributeFilter:['class'] });
 </script>
 </body>
 </html>
