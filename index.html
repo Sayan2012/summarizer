@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AI Hub — Playground (modal improved)</title>
-<meta name="description" content="Playful hub for small AI tools." />
+<title>AI Hub — Full modal tool</title>
+<meta name="description" content="Playful hub for small AI tools — modal shows full tool by default." />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -18,8 +18,6 @@
     --capsule-radius:28px;
     --maxw:1100px;
     --ease:cubic-bezier(.2,.9,.3,1);
-    --modal-w: min(1100px, 92vw);
-    --modal-h: 80vh;
   }
 
   /* background */
@@ -35,7 +33,6 @@
   *{box-sizing:border-box}
   .wrap{max-width:var(--maxw);margin:36px auto;padding:20px;display:flex;flex-direction:column;gap:18px;align-items:center;position:relative;z-index:1}
 
-  .intro{width:100%; text-align:center; margin-top:6px}
   .title{font-size:2rem;margin:0;font-weight:700;letter-spacing:-0.6px}
   .lead{margin-top:8px;color:var(--muted);font-weight:600;max-width:760px;margin-left:auto;margin-right:auto;line-height:1.4}
 
@@ -49,8 +46,6 @@
   .capsule:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(18,24,20,0.09)}
   .swatch{width:46px;height:46px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#07221a;box-shadow:0 8px 20px rgba(18,24,20,0.06)}
   .sw-mint{background:linear-gradient(135deg,var(--accent-1),#c9f0eb)}
-  .sw-sky{background:linear-gradient(135deg,var(--accent-2),#d7e7ff)}
-  .sw-rose{background:linear-gradient(135deg,#ffdfe8,#ffc7e0)}
   .cap-main{display:flex;flex-direction:column;gap:4px;flex:1;text-align:left}
   .cap-main h4{margin:0;font-size:1.05rem;font-weight:700}
   .cap-main p{margin:0;color:var(--muted);font-weight:600;font-size:0.92rem}
@@ -59,27 +54,27 @@
   .help-row{margin-top:10px;color:var(--muted);font-weight:600;font-size:0.92rem}
   .footer{margin-top:26px;color:var(--muted);font-weight:600;font-size:0.92rem}
 
-  /* centered modal/backdrop */
+  /* centered modal/backdrop — large by default */
   .backdrop {
-    position:fixed; inset:0; background:rgba(8,10,12,0.32); display:none; align-items:center; justify-content:center; z-index:1400;
+    position:fixed; inset:0; background:rgba(8,10,12,0.34); display:none; align-items:center; justify-content:center; z-index:1400;
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   }
   .backdrop.open { display:flex; }
 
-  /* modal sized to show more of tool by default */
   .modal {
-    width: var(--modal-w);
-    height: var(--modal-h);
-    max-height: 92vh;
+    /* fuller by default: large window with small gutters */
+    width: calc(100vw - 80px);
+    height: calc(100vh - 80px);
+    max-width: calc(100vw - 80px);
+    max-height: calc(100vh - 80px);
     background: linear-gradient(180deg, #ffffff, #fbfbff);
-    border-radius:14px;
+    border-radius:12px;
     box-shadow: 0 40px 120px rgba(10,14,18,0.18);
     border:1px solid rgba(10,12,12,0.06);
-    overflow:hidden; display:flex; flex-direction:column; transform: translateY(8px) scale(0.985); opacity:0; transition: transform .28s var(--ease), opacity .28s var(--ease);
+    overflow:hidden; display:flex; flex-direction:column; transform: translateY(6px) scale(0.995); opacity:0; transition: transform .28s var(--ease), opacity .28s var(--ease);
   }
   .backdrop.open .modal { transform: translateY(0) scale(1); opacity:1; }
 
-  /* modal header */
   .modal-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:1px solid rgba(0,0,0,0.04) }
   .modal-title { font-weight:800; font-size:1.05rem }
   .modal-controls { display:flex; gap:8px; align-items:center }
@@ -87,43 +82,39 @@
   .mini-btn { background:transparent; border:0; font-weight:700; color:var(--muted); cursor:pointer; padding:8px 10px; border-radius:10px }
   .mini-btn.primary { color:#063033; font-weight:800 }
 
-  /* modal body layout:
-     - by default show iframe large with a right side panel (info)
-     - when maximized hide side panel and give iframe full width
-  */
+  /* modal body: iframe occupies full area (side panel hidden by default for max space) */
   .modal-body { flex:1; display:flex; min-height:0; }
   .modal-iframe { flex:1; border:0; width:100%; height:100%; background:transparent; }
 
+  /* keep side panel available but hidden by default (hidden class) */
   .modal-side { width:320px; border-left:1px solid rgba(0,0,0,0.04); padding:14px; display:flex; flex-direction:column; gap:12px; background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,255,0.98)); transition:opacity .22s ease, transform .22s ease; }
-  .modal-side.hidden { opacity:0; transform: translateX(8px); width:0; padding:0 0; pointer-events:none; }
+  .modal-side.hidden { display:none; opacity:0; transform: translateX(8px); width:0; padding:0 0; pointer-events:none; }
 
   .tiny-loader { width:10px; height:10px; border-radius:999px; background:linear-gradient(90deg,#7fd3b3,#8fb7ff); animation: pulse 1.2s infinite; display:none }
   @keyframes pulse { 0%{ transform:scale(.9); opacity:.7 } 50%{ transform:scale(1.15); opacity:1 } 100%{ transform:scale(.9); opacity:.7 } }
 
   .modal-close { position:absolute; right:12px; top:12px; background:rgba(255,255,255,0.9); border:0; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:700; box-shadow:0 8px 20px rgba(18,24,20,0.06); }
 
-  /* maximized modal variant */
+  /* "maximize" toggles to true fullscreen if requested */
   .modal.max {
-    width: calc(100vw - 48px);
-    height: calc(100vh - 48px);
-    border-radius:10px;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
   }
-  .modal.max .modal-side { display:none; }
-  .modal.max .modal-iframe { flex:1 1 auto; }
 
-  /* responsive adjustments */
+  /* when modal is open, block body scroll */
+  body.modal-open { overflow: hidden; }
+
+  /* responsive fallback */
   @media (max-width:920px){
     .modal { width:94vw; height:86vh; }
-    .modal-side { display:none; }
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="intro" aria-labelledby="mainTitle">
-      <h1 id="mainTitle" class="title">Playful tools — quick wins</h1>
-      <div class="lead">A friendly place for small AI helpers. Click a capsule to open the tool as a floating window — maximize for near full-screen use.</div>
-    </section>
+    <h1 class="title">Playful tools — quick wins</h1>
+    <div class="lead">A friendly place for small AI helpers. Click a capsule to open the tool as a floating window that fills the screen area.</div>
 
     <section class="cluster" aria-label="tools cluster">
       <div class="capsule" data-src="https://sayanaiai-aiprojects.hf.space/" tabindex="0" role="button">
@@ -133,29 +124,17 @@
       </div>
 
       <div class="capsule" data-src="" tabindex="0" role="button">
-        <div class="swatch sw-sky">P</div>
+        <div class="swatch sw-mint">P</div>
         <div class="cap-main"><h4>Paraphraser</h4><p>Flip tone & phrasing. (coming)</p></div>
-        <div class="cap-action">Soon</div>
-      </div>
-
-      <div class="capsule" data-src="" tabindex="0" role="button">
-        <div class="swatch sw-rose">T</div>
-        <div class="cap-main"><h4>Translator</h4><p>Short context-aware translations. (coming)</p></div>
-        <div class="cap-action">Soon</div>
-      </div>
-
-      <div class="capsule" data-src="" tabindex="0" role="button">
-        <div class="swatch sw-sky">K</div>
-        <div class="cap-main"><h4>Keywords</h4><p>Fast phrase extraction for SEO & summaries. (coming)</p></div>
         <div class="cap-action">Soon</div>
       </div>
     </section>
 
-    <div class="help-row">Tip: click a capsule, then click ⤢ to maximize the tool for full focus.</div>
+    <div class="help-row">Tip: click the Summarizer capsule — the tool opens large by default and uses the full available space.</div>
     <div class="footer">© AI Hub — built for quick experiments</div>
   </div>
 
-  <!-- centered modal -->
+  <!-- centered modal (large by default) -->
   <div id="backdrop" class="backdrop" aria-hidden="true" role="dialog" aria-label="Tool window">
     <div id="modal" class="modal" role="document" aria-modal="true">
       <div class="modal-head">
@@ -166,7 +145,6 @@
 
         <div class="modal-controls">
           <div class="tiny-loader" id="modalLoader" aria-hidden="true"></div>
-          <button id="maximizeBtn" class="mini-btn" title="Maximize">⤢</button>
           <button id="openInTab" class="mini-btn primary" title="Open in new tab">Open</button>
           <button id="closeModal" class="mini-btn" title="Close">Close</button>
         </div>
@@ -175,10 +153,9 @@
       <div class="modal-body">
         <iframe id="modalFrame" class="modal-iframe" src="" title="Tool iframe" loading="lazy" allowfullscreen></iframe>
 
-        <aside id="modalSide" class="modal-side" aria-hidden>
+        <aside id="modalSide" class="modal-side hidden" aria-hidden>
           <h4 id="modalName">Tool</h4>
-          <p id="modalDesc" style="color:var(--muted)">Quick info and shortcuts appear here. When maximized the info panel hides so the tool fits comfortably.</p>
-
+          <p id="modalDesc" style="color:var(--muted)">Info & shortcuts (hidden by default to give iframe full space).</p>
           <div style="margin-top:auto;color:var(--muted);font-size:0.9rem">Tip: press ESC to close</div>
         </aside>
       </div>
@@ -200,12 +177,10 @@
   const closeModalBtn = document.getElementById('closeModal');
   const modalCloseX = document.getElementById('modalCloseX');
   const modalLoader = document.getElementById('modalLoader');
-  const maximizeBtn = document.getElementById('maximizeBtn');
   const modalSide = document.getElementById('modalSide');
 
   let currentUrl = '';
   let clearTimeoutId = null;
-  let maximized = false;
 
   function setLoading(on){
     modalLoader.style.display = on ? 'block' : 'none';
@@ -222,6 +197,7 @@
     modalDesc.textContent = subtitle || '';
 
     setLoading(true);
+    // set iframe src and listen once for load
     modalFrame.src = url;
     modalFrame.addEventListener('load', function onLoad(){
       setLoading(false);
@@ -229,20 +205,24 @@
       modalFrame.removeEventListener('load', onLoad);
     }, { once: true });
 
+    // open modal (large by default)
     backdrop.classList.add('open');
+    document.body.classList.add('modal-open'); // lock body scroll
     backdrop.setAttribute('aria-hidden','false');
 
-    // ensure modal not maximized by default
-    if(maximized) toggleMaximize(false);
+    // ensure side panel hidden so iframe fills space
+    modalSide.classList.add('hidden');
 
-    setTimeout(()=> modalCloseX.focus(), 250);
+    // focus close button for accessibility
+    setTimeout(()=> modalCloseX.focus(), 240);
   }
 
   function closeModal(){
     backdrop.classList.remove('open');
     backdrop.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
 
-    // clear iframe after close animation
+    // clear iframe after animation to free resources
     clearTimeoutId = setTimeout(()=> {
       try{ modalFrame.src = ''; }catch(e){}
       clearTimeoutId = null;
@@ -250,22 +230,6 @@
     currentUrl = '';
   }
 
-  function toggleMaximize(force){
-    const should = typeof force === 'boolean' ? force : !maximized;
-    maximized = should;
-    if(should){
-      modal.classList.add('max');
-      // hide side panel visually (for better view)
-      modalSide.classList.add('hidden');
-    } else {
-      modal.classList.remove('max');
-      modalSide.classList.remove('hidden');
-    }
-    // adjust focus
-    setTimeout(()=> modalFrame.focus(), 120);
-  }
-
-  // wire capsules -> modal open
   capsules.forEach(c => {
     c.addEventListener('click', () => {
       const url = c.dataset.src || '';
@@ -284,13 +248,14 @@
   modalCloseX.addEventListener('click', closeModal);
 
   // backdrop click closes when clicking outside modal
-  backdrop.addEventListener('click', (e)=> { if(e.target === backdrop) closeModal(); });
+  backdrop.addEventListener('click', (e)=> {
+    if(e.target === backdrop) closeModal();
+  });
 
-  // ESC closes modal
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
-
-  // maximize button
-  maximizeBtn.addEventListener('click', ()=> toggleMaximize());
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+  });
 
   // accessibility: reflect open state for screen readers
   const obs = new MutationObserver(()=> {
